@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,10 +26,16 @@ public class EntityModal : MonoBehaviour
     public EntityView view;
     public Vector2Int dir;
 
+    public event Action OnExpire;
 
     protected virtual void Start() {
         // Find coord
         coord = Utils.PosToCoord(transform.position);
     }
 
+    public virtual IEnumerator TriggerOnExpire(float delay = 0) {
+        yield return new WaitForSeconds(delay);
+
+        OnExpire?.Invoke();
+    }
 }

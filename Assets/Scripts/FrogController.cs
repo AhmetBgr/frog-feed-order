@@ -13,7 +13,7 @@ public class FrogController : MonoBehaviour
     private GridController gridController;
 
     //public delegate void OnTongueMoveDelegate(List<Vector2Int> tonguePathCoord);
-    public static event Action<List<Vector2Int>> OnTongueMove;
+    public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
 
 
@@ -83,9 +83,13 @@ public class FrogController : MonoBehaviour
         if (!nextEntity || (nextEntity.type != EntityType.Frog && nextEntity.color == modal.color)) {
             // Trigger event
             OnSuccessfullEat?.Invoke(tonguePathCoord, tonguePath);
+
+            StartCoroutine(modal.TriggerOnExpire((tonguePath.Count - 1) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
+
+            //view.AnimateScale(Vector3.zero, 0.5f, (tonguePath.Count-1) * Game.tongueMoveDur * 2 + Game.tongueMoveDur);
         }
 
-        OnTongueMove?.Invoke(tonguePathCoord);
+        OnTongueMove?.Invoke(tonguePathCoord, modal.color);
 
         return tonguePath;
     }

@@ -65,7 +65,7 @@ public class GridController : MonoBehaviour
 
         if (coord.x >= 5 | coord.y >= 5) return null;
 
-        return nodesGrid[coord.x, coord.y]?.activeCell?.entity;
+        return nodesGrid[coord.x, coord.y]?.topCell?.entity;
     }
 
 

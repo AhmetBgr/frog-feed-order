@@ -16,7 +16,7 @@ public class FrogView : EntityView
 
     private IEnumerator TongueAnim(List<Vector3> tonguePath, float segmentDuration, Action onCompleteCallBack = null) {
         // Extent tongue anim
-        lr.enabled = true;
+        lr.gameObject.SetActive(true);
         int pointsCount = tonguePath.Count;
         lr.positionCount = pointsCount;
 
@@ -80,6 +80,8 @@ public class FrogView : EntityView
 
         if (onCompleteCallBack != null)
             onCompleteCallBack();
+
+        lr.gameObject.SetActive(false);
     }
 
     public void DeactivateFrog() {

@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Cell : MonoBehaviour
 {
     public EntityModal entity;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+
+    private void OnEnable() {
+
+    }
+
+    private void OnDisable() {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void AnimateScale() {
+        transform.DOScale(0f, 0.5f);
     }
 }

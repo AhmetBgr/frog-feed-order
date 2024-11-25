@@ -10,7 +10,9 @@ public class EntityController : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        modal.view = view;   
+        modal.view = view;
+        //transform.SetParent(null);
+
     }
-    
+
 }
