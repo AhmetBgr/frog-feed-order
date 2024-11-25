@@ -23,6 +23,8 @@ public class EntityModal : MonoBehaviour
     public EntityType type;
     public EntityColor color;
     public EntityView view;
+    public Vector2Int dir;
+
 
     protected virtual void Start() {
         // Find coord

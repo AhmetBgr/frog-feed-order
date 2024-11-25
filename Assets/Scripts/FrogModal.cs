@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class FrogModal : EntityModal
 {
-    public Vector2Int dir;
+    //public Vector2Int dir;
 
     protected override void Start() {
         base.Start();
 
-        // Find direction
-        dir = Vector2Int.down;
+        // Update direction
+        switch (transform.rotation.eulerAngles.y) {
+            case 0f:
+            dir = Vector2Int.down;
+            break;
+            case 90f:
+            dir = Vector2Int.left;
+            break;
+            case 180f:
+            dir = Vector2Int.up;
+            break;
+            case 270f:
+            dir = Vector2Int.right;
+            break;
+        }
     }
 
 }

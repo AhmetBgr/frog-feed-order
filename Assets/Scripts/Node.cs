@@ -44,7 +44,7 @@ public class Node : MonoBehaviour
 
         GameObject cell = Instantiate(prefab, position: transform.GetChild(transform.childCount-1).position + (Vector3.up * 0.1f), Quaternion.identity);
         cell.transform.SetParent(transform);
-        
+        activeCell = cell.GetComponent<Cell>();
         /*cells.Add(cell.GetComponent<Cell>());
 
         if(cells.Count > 1) {

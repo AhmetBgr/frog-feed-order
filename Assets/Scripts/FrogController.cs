@@ -43,15 +43,18 @@ public class FrogController : MonoBehaviour
         List<Vector2Int> tonguePathCoord = new List<Vector2Int>();
         tonguePathCoord.Add(Utils.PosToCoord(transform.position));
 
+        Vector2Int tongueDir = modal.dir;
 
-        EntityModal nextEntity = gridController.GetEntity(gridController.GetNextCoord(modal.coord, modal.dir));
+        EntityModal nextEntity = gridController.GetEntity(gridController.GetNextCoord(modal.coord, tongueDir));
 
         if (nextEntity == null) {
-            Debug.LogWarning($"Next cell has no entity: {gridController.GetNextCoord(modal.coord, modal.dir)}");
+            Debug.LogWarning($"Next cell has no entity: {gridController.GetNextCoord(modal.coord, tongueDir)}");
             return tonguePath;
         }
 
         float delay = 0f;
+
+
 
         while (IsValidEntity(nextEntity)) {
             // Add entity position to path
@@ -61,9 +64,14 @@ public class FrogController : MonoBehaviour
             // Trigger animation 
             //nextEntity.view.AnimatePunchScale(Vector3.one * 0.5f, 0.2f, delay);
 
+            // change dir if next enitity is arrow iwth same color
+            if(nextEntity.type == EntityType.Arrow && nextEntity.color == modal.color) {
+                tongueDir = nextEntity.dir;
+            }
+
             // Update delay and get the next entity
             delay += Game.tongueMoveDur;
-            nextEntity = gridController.GetEntity(gridController.GetNextCoord(nextEntity.coord, modal.dir));
+            nextEntity = gridController.GetEntity(gridController.GetNextCoord(nextEntity.coord, tongueDir));
 
             if (nextEntity == null) {
                 Debug.Log("Next cell has no entity.");

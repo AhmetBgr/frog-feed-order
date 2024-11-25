@@ -167,7 +167,16 @@ public class LevelEditor : EditorWindow {
 			node.RemoveLastCell();
 		}
 		else if (selGridInt == 2) {
+			EntityModal entity = node.activeCell?.entity;
+			Debug.Log("here1");
 
+
+			if (!entity || entity.type == EntityType.Grape ) return;
+
+			Debug.Log("here2");
+			Vector3 angles = entity.transform.rotation.eulerAngles;
+
+			entity.transform.eulerAngles = new Vector3(angles.x, (angles.y + 90)%360, angles.z);
 		}
 		else if (selGridInt == 3) {
 			node.AddCell(EntityType.Grape, GetEntityColor(selGridInt2));
