@@ -57,15 +57,22 @@ public class GridController : MonoBehaviour
 
         if (coord.x >= 5 | coord.y >= 5) return null;
 
+        if (coord.x < 0 | coord.y < 0) return null;
+
 
         return nodesGrid[coord.x, coord.y];
     }
 
     public EntityModal GetEntity(Vector2Int coord) {
+        Debug.Log("coord: " + coord);
 
         if (coord.x >= 5 | coord.y >= 5) return null;
 
-        return nodesGrid[coord.x, coord.y]?.topCell?.entity;
+        if (coord.x < 0 | coord.y < 0) return null;
+
+
+
+        return nodesGrid[coord.x, coord.y].topCell.entity;
     }
 
 
