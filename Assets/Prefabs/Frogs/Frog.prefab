@@ -259,6 +259,7 @@ MonoBehaviour:
   coord: {x: 0, y: 0}
   type: 0
   color: 0
+  view: {fileID: 9212175779826650880}
   dir: {x: 0, y: 0}
 --- !u!114 &9212175779826650880
 MonoBehaviour:
@@ -272,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d184ae4f72ad5d44a9de43d841a35d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modal: {fileID: 7530044279479584224}
   lr: {fileID: 8026477943891562601}
 --- !u!114 &853598008421522868
 MonoBehaviour:

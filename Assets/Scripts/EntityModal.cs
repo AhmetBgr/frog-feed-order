@@ -22,6 +22,7 @@ public class EntityModal : MonoBehaviour
     public Vector2Int coord;
     public EntityType type;
     public EntityColor color;
+    public EntityView view;
 
     protected virtual void Start() {
         // Find coord

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FrogView : MonoBehaviour
+public class FrogView : EntityView
 {
     public LineRenderer lr;
     //public List<Vector3> tonguePath = new List<Vector3>();
@@ -14,7 +14,7 @@ public class FrogView : MonoBehaviour
         StartCoroutine(TongueAnim(tonguePath, dur, onCompleteCallBack));
     }
 
-    private IEnumerator TongueAnim(List<Vector3> tonguePath, float dur, Action onCompleteCallBack = null) {
+    private IEnumerator TongueAnim(List<Vector3> tonguePath, float segmentDuration, Action onCompleteCallBack = null) {
         // Extent tongue anim
         lr.enabled = true;
         int pointsCount = tonguePath.Count;
@@ -25,7 +25,7 @@ public class FrogView : MonoBehaviour
         }
 
         int piece = (1 * pointsCount - 1);
-        float segmentDuration = dur / piece;
+        //float segmentDuration = dur / piece;
 
         for (int i = 0; i < pointsCount - 1; i++) {
             float startTime = Time.time;
@@ -35,7 +35,7 @@ public class FrogView : MonoBehaviour
             Vector3 pos = startPosition;
             while (pos != endPosition) {
 
-                t = segmentDuration == 0 ? 1 : (Time.time - startTime) / segmentDuration;
+                t = segmentDuration == 0 ? 1 : ((Time.time - startTime) / segmentDuration);
                 pos = Vector3.Lerp(startPosition, endPosition, t);
 
                 // animate all other points except point at index i
@@ -47,7 +47,7 @@ public class FrogView : MonoBehaviour
         }
 
 
-        yield return new WaitForSeconds(dur);
+        yield return new WaitForSeconds(segmentDuration * Time.deltaTime * 20f);
 
         // Retract tongue anim
 
@@ -64,7 +64,7 @@ public class FrogView : MonoBehaviour
             Vector3 pos = endPosition;
 
             float pieceLength = (endPosition - startPosition).magnitude;
-            segmentDuration = dur * (pieceLength / totalLenght);
+            //segmentDuration = dur * (pieceLength / totalLenght);
 
             while (pos != startPosition) {
                 float t = (Time.time - startTime) / segmentDuration;

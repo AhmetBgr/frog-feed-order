@@ -52,15 +52,13 @@ public class GridController : MonoBehaviour
         return firstMatch.gameObject; // Return null if entity not found
     }
 
-    public Node GetNode(Vector3 pos) {
+    public Node GetNode(Vector2Int coord) {
         UpdateNodesGrid();
 
-        int x = Mathf.Abs((int)pos.x);
-        int y = Mathf.Abs((int)pos.z);
+        if (coord.x >= 5 | coord.y >= 5) return null;
 
-        if (x >= 5 | y >= 5) return null;
 
-        return nodesGrid[x, y];
+        return nodesGrid[coord.x, coord.y];
     }
 
     public EntityModal GetEntity(Vector2Int coord) {
@@ -69,6 +67,7 @@ public class GridController : MonoBehaviour
 
         return nodesGrid[coord.x, coord.y]?.activeCell?.entity;
     }
+
 
     public Vector2Int GetNextCoord(Vector2Int fromCoord, Vector2Int dir) {
         Vector2Int nextCoord = new Vector2Int(fromCoord.x + dir.x, fromCoord.y - dir.y);

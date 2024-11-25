@@ -158,7 +158,7 @@ public class LevelEditor : EditorWindow {
 		//if (Selection.activeGameObject == null) return;
 
 		Node node;
-		node = gridController.GetNode(GetPosition(e.mousePosition));
+		node = gridController.GetNode(Utils.PosToCoord(GetPosition(e.mousePosition)));
 
 		if (node == null) return;
 
