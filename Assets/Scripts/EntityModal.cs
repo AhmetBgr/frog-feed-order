@@ -16,11 +16,16 @@ public enum EntityColor {
     Yellow
 }
 
-public class Entity : MonoBehaviour
+public class EntityModal : MonoBehaviour
 {
     public GameObject prefab;
     public Vector2Int coord;
     public EntityType type;
     public EntityColor color;
+
+    protected virtual void Start() {
+        // Find coord
+        coord = Utils.PosToCoord(transform.position);
+    }
 
 }

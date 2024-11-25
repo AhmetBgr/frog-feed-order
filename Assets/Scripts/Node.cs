@@ -6,6 +6,7 @@ public class Node : MonoBehaviour
 {
 
     public List<Cell> cells = new List<Cell>();
+    public Cell activeCell;
 
     private static GridController gridController;
 
@@ -13,12 +14,12 @@ public class Node : MonoBehaviour
     {
         if(gridController == null && transform.parent != null)
             transform.parent.TryGetComponent(out gridController);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        for (int i = 0; i < transform.childCount; i++) {
+            cells.Add(transform.GetChild(i).GetComponent<Cell>());
+        }
+
+        activeCell = cells[cells.Count - 1];
     }
 
     public void RemoveLastCell() {

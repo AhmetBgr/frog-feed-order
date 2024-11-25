@@ -131,7 +131,7 @@ LineRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &9036005969333822343
@@ -259,6 +259,7 @@ MonoBehaviour:
   coord: {x: 0, y: 0}
   type: 0
   color: 0
+  dir: {x: 0, y: 0}
 --- !u!114 &9212175779826650880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,4 +285,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd98ec3880b8fe4e8649ffc412e06ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modal: {fileID: 7530044279479584224}
   view: {fileID: 9212175779826650880}

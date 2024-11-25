@@ -20,6 +20,10 @@ public class FrogView : MonoBehaviour
         int pointsCount = tonguePath.Count;
         lr.positionCount = pointsCount;
 
+        for (int i = 0; i < pointsCount; i++) {
+            lr.SetPosition(i, tonguePath[0]);
+        }
+
         int piece = (1 * pointsCount - 1);
         float segmentDuration = dur / piece;
 

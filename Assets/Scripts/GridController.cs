@@ -16,7 +16,11 @@ public class GridController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UpdateNodesGrid();
+
     }
+
+
 
     public void PopulateNodesGrid() {
         List<GameObject> objs = new List<GameObject>();
@@ -58,6 +62,36 @@ public class GridController : MonoBehaviour
 
         return nodesGrid[x, y];
     }
+
+    public EntityModal GetEntity(Vector2Int coord) {
+
+        if (coord.x >= 5 | coord.y >= 5) return null;
+
+        return nodesGrid[coord.x, coord.y]?.activeCell?.entity;
+    }
+
+    public Vector2Int GetNextCoord(Vector2Int fromCoord, Vector2Int dir) {
+        Vector2Int nextCoord = new Vector2Int(fromCoord.x + dir.x, fromCoord.y - dir.y);
+
+        return nextCoord;
+    }
+
+    /*public Node GetNextNode(Vector2Int fromCoord, Vector2Int dir) {
+
+        Vector2Int nextCoord = new Vector2Int(fromCoord.x + dir.x, fromCoord.y - dir.y);
+        if (nextCoord.x >= 5 | nextCoord.y >= 5) return null;
+
+        Node node = nodesGrid[nextCoord.x, nextCoord.y];
+
+        if(node == null) {
+            Debug.LogWarning("null next node is returned from: " + nextCoord);
+        }
+        else {
+            Debug.Log("next node is returned from: " + nextCoord);
+        }
+
+        return node;
+    }*/
 
     private void UpdateNodesGrid() {
         for (int i = 0; i < 25; i++) {
