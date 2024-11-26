@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UIController : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class UIController : MonoBehaviour
     void UpdateMoveCounterText(int movesCount){
         //Debug.Log("move count in uicont: " + movesCount);
         movesCounterText.text = movesCount.ToString();
+
+        movesCounterText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
     }
     private void TryOpenCorrectPanel(State state) {
 
