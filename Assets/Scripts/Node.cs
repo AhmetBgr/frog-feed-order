@@ -11,22 +11,13 @@ public class Node : MonoBehaviour
     private static GridController gridController;
 
     private void OnEnable() {
-        cells.Clear();
-        for (int i = 0; i < transform.childCount; i++) {
-            cells.Add(transform.GetChild(i).GetComponent<Cell>());
-        }
+        UpdateTopCell();
 
-        topCell = cells[cells.Count - 1];
-
-        if (!topCell.entity) return;
-
-        topCell.entity.OnExpire += RemoveTopCell;
+        SubscribeOnExpire();
     }
 
     private void OnDisable() {
-        if (!topCell.entity) return;
-
-        topCell.entity.OnExpire -= RemoveTopCell;
+        UnsubscribeOnExpire();
     }
 
 
@@ -38,8 +29,41 @@ public class Node : MonoBehaviour
 
     }
 
+    private void UpdateTopCell() {
+        cells.Clear();
+        for (int i = 0; i < transform.childCount; i++) {
+            cells.Add(transform.GetChild(i).GetComponent<Cell>());
+        }
+
+        topCell = cells[cells.Count - 1];
+
+    }
+
+    private void SubscribeOnExpire() {
+        if (topCell.entity == null) {
+
+            Debug.LogWarning("tried to subscribe base cell entity");
+            return; // dont remove the base cell
+
+        }
+        topCell.entity.OnExpire += RemoveTopCell;
+    }
+
+    private void UnsubscribeOnExpire() {
+        if (!topCell.entity) return;
+
+        topCell.entity.OnExpire -= RemoveTopCell;
+    }
     public void RemoveTopCell() {
-        if (!topCell.entity) return; // dont remove the base cell
+        UnsubscribeOnExpire();
+
+
+        if (topCell.entity == null) {
+
+            Debug.LogWarning("tried to remove base cell");
+            return; // dont remove the base cell
+        }
+
 
         topCell.AnimateScale();
 
@@ -52,12 +76,17 @@ public class Node : MonoBehaviour
 
         topCell.entity.gameObject.SetActive(true);
 
+        SubscribeOnExpire();
+
     }
 
     public void DeleteTopCell() {
+        UpdateTopCell();
+
+
         if (transform.childCount <= 1) return;
 
-        if (cells.Count > 1) {
+        if (cells.Count >= 3) {
             cells[cells.Count - 2].entity.gameObject.SetActive(true);
         }
 
@@ -69,6 +98,9 @@ public class Node : MonoBehaviour
     }
 
     public void AddCell(EntityType type, EntityColor color) {
+        UpdateTopCell();
+
+
         if (gridController == null && transform.parent != null)
             transform.parent.TryGetComponent(out gridController);
 

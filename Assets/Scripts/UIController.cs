@@ -18,7 +18,7 @@ public class UIController : MonoBehaviour
     }
 
     void UpdateMoveCounterText(int movesCount){
-        Debug.Log("move count in uicont: " + movesCount);
+        //Debug.Log("move count in uicont: " + movesCount);
         movesCounterText.text = movesCount.ToString();
     }
 }

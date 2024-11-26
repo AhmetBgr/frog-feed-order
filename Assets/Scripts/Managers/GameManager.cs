@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject); // Make the instance persistent
+        //DontDestroyOnLoad(gameObject); // Make the instance persistent
 
     }
 
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     private void TriggerOnMoveCountChanged() {
         OnMovesCountChanged?.Invoke(movesCount);
 
-        Debug.Log("move count:" + movesCount);
+        //Debug.Log("move count:" + movesCount);
 
         // check for level complete
         foreach (var item in frogs) {
