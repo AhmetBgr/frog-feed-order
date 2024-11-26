@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.IO;
 
@@ -142,16 +144,29 @@ public class LevelEditor : EditorWindow {
 
 		BigSpace();
 		BigSpace();
-		BigSpace();
-		BigSpace();
+
 
 
 		if (GUILayout.Button("Clear Grid")) {
 			gridController.PopulateNodesGrid();
 		}
+
+		BigSpace();
+		BigSpace();
+		
+		if (GUILayout.Button("Save Scene")) {
+			SaveScene();
+		}
+
 		EditorGUILayout.EndScrollView();
 		GUILayout.EndVertical();
 
+	}
+
+	void SaveScene() {
+
+		EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+		EditorSceneManager.SaveOpenScenes();
 	}
 
 	void ApplyAction() {

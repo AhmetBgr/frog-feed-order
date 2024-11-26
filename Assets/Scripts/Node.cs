@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 
 public class Node : MonoBehaviour
 {
@@ -90,8 +92,18 @@ public class Node : MonoBehaviour
             cells[cells.Count - 2].entity.gameObject.SetActive(true);
         }
 
-        cells.RemoveAt(cells.Count - 1);
-        
+        Cell cell = cells[cells.Count - 1];
+
+        if (!Application.isPlaying) {
+            EditorUtility.SetDirty(cell.gameObject);
+            EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            EditorSceneManager.SaveOpenScenes();
+        }
+
+        cells.Remove(cell);
+
+
+
         DestroyImmediate(transform.GetChild(transform.childCount - 1).gameObject);
 
 
@@ -123,6 +135,12 @@ public class Node : MonoBehaviour
             cells[cells.Count - 2].entity.gameObject.SetActive(false);
         }*/
 
+
+        if (!Application.isPlaying) {
+            EditorUtility.SetDirty(topCell.gameObject);
+            EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            EditorSceneManager.SaveOpenScenes();
+        }
     }
 
 }

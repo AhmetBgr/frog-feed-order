@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class EntityView : MonoBehaviour
         transform.DOPunchScale(scale, duration, vibrato:1).SetDelay(delay);
     }
 
-    public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f) {
-        transform.DOScale(endValue, duration).SetDelay(delay);
+    public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f, Action onComplete = null) {
+        transform.DOScale(endValue, duration).SetDelay(delay).OnComplete(() => onComplete?.Invoke());
     }
 }

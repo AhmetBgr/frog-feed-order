@@ -37,8 +37,8 @@ public class EntityModal : MonoBehaviour
     }
 
     public virtual IEnumerator TriggerOnExpire(float delay = 0) {
+
         yield return new WaitForSeconds(delay);
-        isExpired = true;
 
         OnExpire?.Invoke();
     }

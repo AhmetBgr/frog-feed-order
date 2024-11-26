@@ -39,6 +39,7 @@ public class FrogController : MonoBehaviour
     }
 
     private List<Vector3> GetTonguePath() {
+        modal.isExpired = true;
         OnInteracted?.Invoke();
 
         List<Vector3> tonguePath = new List<Vector3>();

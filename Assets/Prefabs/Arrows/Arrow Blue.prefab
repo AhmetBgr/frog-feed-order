@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1119574762380759342}
   - component: {fileID: 3469422469043736317}
   - component: {fileID: 3560997266780914725}
-  - component: {fileID: 3705492825235367804}
+  - component: {fileID: 922619554381243674}
   m_Layer: 0
   m_Name: Arrow Blue
   m_TagString: Untagged
@@ -105,6 +105,7 @@ MonoBehaviour:
   color: 0
   view: {fileID: 3560997266780914725}
   dir: {x: 0, y: 0}
+  isExpired: 0
 --- !u!114 &3560997266780914725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,7 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modal: {fileID: 3469422469043736317}
---- !u!114 &3705492825235367804
+--- !u!114 &922619554381243674
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +128,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7335310659837104295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69eb02168b2efae4ea42646352cd88f7, type: 3}
+  m_Script: {fileID: 11500000, guid: b451d2871c85cbc44868cb74cff42607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 3560997266780914725}
   modal: {fileID: 3469422469043736317}
+  view: {fileID: 3560997266780914725}

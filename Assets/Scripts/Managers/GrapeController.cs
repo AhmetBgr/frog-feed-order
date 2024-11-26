@@ -28,7 +28,9 @@ public class GrapeController : MonoBehaviour
 
             float retractDelay = CalculateRecractDelay(tonguePath.Count, index);
             view.PlayRetractAnim(path, Game.tongueMoveDur * path.Count, retractDelay);
-            view.AnimateScale(Vector3.zero, Game.tongueMoveDur, (tonguePath.Count - 1) * Game.tongueMoveDur * 1.8f + (index * 0.2f * Game.tongueMoveDur)); //(tonguePath.Count - index + tonguePath.Count) * Game.tongueMoveDur
+
+            float scaleDelay = (tonguePath.Count - 1) * Game.tongueMoveDur * 1.8f + (index * 0.2f * Game.tongueMoveDur);
+            view.AnimateScale(Vector3.zero, Game.tongueMoveDur, scaleDelay, () => gameObject.SetActive(false)); //(tonguePath.Count - index + tonguePath.Count) * Game.tongueMoveDur
 
             StartCoroutine(modal.TriggerOnExpire(retractDelay + Game.tongueMoveDur/2));
         }

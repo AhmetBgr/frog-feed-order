@@ -49,29 +49,32 @@ public class GameManager : MonoBehaviour
         OnMovesCountChanged?.Invoke(movesCount);
 
         //Debug.Log("move count:" + movesCount);
-
-        // check for level complete
-        foreach (var item in frogs) {
-            if (!item.modal.isExpired)
-                return;
-        }
-
-        // Trigger Level complete event
-        Game.state = State.LevelComplete;
-
-
-
-        if (movesCount <= 0 && Game.state != State.LevelComplete) {
-            // Lose Condition
-            Game.state = State.GameOver;
-            return;
-        }
-
-
     }
 
     private void DecreaseMoveCount() {
         movesCount--;
+
+        // check for level complete
+
+        bool isAllFrogsExpired = true;
+        foreach (var item in frogs) {
+            if (!item.modal.isExpired) {
+                isAllFrogsExpired = false;
+                break;
+            }
+        }
+
+        if (isAllFrogsExpired) {
+            // Trigger Level complete event
+            Game.SetState(State.LevelComplete);
+        }
+        else {
+            if (movesCount <= 0 && Game.state != State.LevelComplete) {
+                // Lose Condition
+                Game.SetState(State.GameOver);
+                return;
+            }
+        }
     }
 
     public void AddToFrogsPool(FrogController frog) {
