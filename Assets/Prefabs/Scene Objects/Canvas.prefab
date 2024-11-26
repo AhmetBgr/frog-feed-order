@@ -1206,6 +1206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCompletePanel: {fileID: 3182385573684593180}
   gameOverPanel: {fileID: 1722961732445026744}
+  restartButton: {fileID: 1875489854840629081}
+  nextButton: {fileID: 2379995971014521277}
   movesCounterText: {fileID: 6640739345201933333}
 --- !u!1 &7462605659739542023
 GameObject:

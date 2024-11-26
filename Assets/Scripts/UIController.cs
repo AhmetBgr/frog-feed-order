@@ -10,6 +10,8 @@ public class UIController : MonoBehaviour
     public RectTransform levelCompletePanel;
     public RectTransform gameOverPanel;
 
+    public Button restartButton;
+    public Button nextButton;
 
     public TextMeshProUGUI movesCounterText;
 
@@ -23,6 +25,12 @@ public class UIController : MonoBehaviour
         GameManager.instance.OnMovesCountChanged -= UpdateMoveCounterText;
         Game.onStateChanged -= TryOpenCorrectPanel;
 
+
+    }
+
+    private void Start() {
+        restartButton.onClick.AddListener(LevelManager.instance.ReloadCurScene);
+        nextButton.onClick.AddListener(LevelManager.instance.LoadNextScene);
 
     }
 
