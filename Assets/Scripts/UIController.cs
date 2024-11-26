@@ -9,11 +9,11 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI movesCounterText;
 
     private void OnEnable() {
-        GameManager.instance.OnMoveCountChanged += UpdateMoveCounterText;   
+        GameManager.instance.OnMovesCountChanged += UpdateMoveCounterText;   
     }
 
     private void OnDisable() {
-        GameManager.instance.OnMoveCountChanged -= UpdateMoveCounterText;
+        GameManager.instance.OnMovesCountChanged -= UpdateMoveCounterText;
 
     }
 
