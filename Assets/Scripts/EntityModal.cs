@@ -26,6 +26,9 @@ public class EntityModal : MonoBehaviour
     public EntityView view;
     public Vector2Int dir;
 
+    public bool isExpired = false;
+
+
     public event Action OnExpire;
 
     protected virtual void Start() {
@@ -35,6 +38,7 @@ public class EntityModal : MonoBehaviour
 
     public virtual IEnumerator TriggerOnExpire(float delay = 0) {
         yield return new WaitForSeconds(delay);
+        isExpired = true;
 
         OnExpire?.Invoke();
     }

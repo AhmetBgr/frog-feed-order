@@ -13,6 +13,7 @@ public class FrogController : MonoBehaviour
     private GridController gridController;
 
     //public delegate void OnTongueMoveDelegate(List<Vector2Int> tonguePathCoord);
+    public static event Action OnInteracted;
     public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
 
@@ -23,6 +24,7 @@ public class FrogController : MonoBehaviour
         //base.Start();
         modal.view = view;
         gridController = FindAnyObjectByType<GridController>();
+        GameManager.instance.AddToFrogsPool(this);
     }
 
     private void OnMouseDown() {
@@ -37,6 +39,8 @@ public class FrogController : MonoBehaviour
     }
 
     private List<Vector3> GetTonguePath() {
+        OnInteracted?.Invoke();
+
         List<Vector3> tonguePath = new List<Vector3>();
         tonguePath.Add(transform.position);
 
