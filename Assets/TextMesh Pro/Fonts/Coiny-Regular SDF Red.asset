@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Coiny-Regular SDF Red
   m_EditorClassIdentifier: 
-  hashCode: -454261324
+  hashCode: -296774617
   material: {fileID: 6408133567255044404}
-  materialHashCode: -841478636
+  materialHashCode: 1224671399
   m_Version: 1.1.0
   m_SourceFontFileGUID: 00ade1822231fd748ac7557dbc46a4a3
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 00ade1822231fd748ac7557dbc46a4a3,
@@ -2730,7 +2730,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FaceTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8b7918cf622ca3e41a05ff2012cf6a49, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

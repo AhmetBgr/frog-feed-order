@@ -24,7 +24,6 @@ public class FrogController : MonoBehaviour
         //base.Start();
         modal.view = view;
         gridController = FindAnyObjectByType<GridController>();
-        GameManager.instance.AddToFrogsPool(this);
     }
 
     private void OnMouseDown() {

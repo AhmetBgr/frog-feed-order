@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private List<FrogController> frogs = new List<FrogController>();
+    [SerializeField] private List<FrogModal> frogs = new List<FrogModal>();
 
     [SerializeField] private int _movesCount;
 
@@ -37,11 +37,13 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnEnable() {
-        FrogController.OnInteracted += DecreaseMoveCount; 
+        FrogController.OnInteracted += DecreaseMoveCount;
+        FrogModal.onFrogExpire += CheckforLevelComplete;
     }
 
     private void OnDisable() {
         FrogController.OnInteracted -= DecreaseMoveCount;
+        FrogModal.onFrogExpire -= CheckforLevelComplete;
 
     }
 
@@ -54,30 +56,31 @@ public class GameManager : MonoBehaviour
     private void DecreaseMoveCount() {
         movesCount--;
 
-        // check for level complete
+        CheckForGameOver();
+    }
 
-        bool isAllFrogsExpired = true;
-        foreach (var item in frogs) {
-            if (!item.modal.isExpired) {
-                isAllFrogsExpired = false;
-                break;
-            }
-        }
-
-        if (isAllFrogsExpired) {
-            // Trigger Level complete event
-            Game.SetState(State.LevelComplete);
-        }
-        else {
-            if (movesCount <= 0 && Game.state != State.LevelComplete) {
-                // Lose Condition
-                Game.SetState(State.GameOver);
-                return;
-            }
+    private void CheckForGameOver() {
+        if (movesCount <= 0 && Game.state != State.LevelComplete) {
+            // Lose Condition
+            Game.SetState(State.GameOver);
+            return;
         }
     }
 
-    public void AddToFrogsPool(FrogController frog) {
+    private void CheckforLevelComplete() {
+        // check for level complete
+
+        foreach (var item in frogs) {
+            if (!item.isExpired) {
+                return;
+            }
+        }
+
+        // Trigger Level complete event
+        Game.SetState(State.LevelComplete);
+    }
+
+    public void AddToFrogsPool(FrogModal frog) {
         frogs.Add(frog);
     }
 }
