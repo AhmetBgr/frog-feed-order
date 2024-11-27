@@ -46,3 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frogs: []
   _movesCount: 0
+  levelCompleteSFX: {fileID: 11400000, guid: 4c1309e888ac78d4ca86e138ab28e237, type: 2}
+  gameOverSFX: {fileID: 11400000, guid: f28a7dfc643c03948945fbd93f62e5bd, type: 2}

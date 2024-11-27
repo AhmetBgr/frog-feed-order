@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int _movesCount;
 
+    public SoundEffect levelCompleteSFX;
+    public SoundEffect gameOverSFX;
+
+
     public int movesCount {
         get => _movesCount;
         set {
@@ -63,6 +67,7 @@ public class GameManager : MonoBehaviour
         if (movesCount <= 0 && Game.state != State.LevelComplete) {
             // Lose Condition
             Game.SetState(State.GameOver);
+            AudioManager.instance.PlaySound(gameOverSFX);
             return;
         }
     }
@@ -78,6 +83,8 @@ public class GameManager : MonoBehaviour
 
         // Trigger Level complete event
         Game.SetState(State.LevelComplete);
+        AudioManager.instance.PlaySound(levelCompleteSFX);
+
     }
 
     public void AddToFrogsPool(FrogModal frog) {

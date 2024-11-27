@@ -75,6 +75,7 @@ MonoBehaviour:
   color: 0
   view: {fileID: 4719265725870253153}
   dir: {x: 0, y: 0}
+  isExpired: 0
 --- !u!114 &4719265725870253153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +89,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modal: {fileID: 8971673916163357929}
+  punchScaleSFX: {fileID: 11400000, guid: a47b54e1ba2b78e4f92c9516f4c1a0c5, type: 2}
+  eatenSFX: {fileID: 11400000, guid: baacd1786d1bf16418e7d3c535562d35, type: 2}
 --- !u!114 &1543952961550494103
 MonoBehaviour:
   m_ObjectHideFlags: 0

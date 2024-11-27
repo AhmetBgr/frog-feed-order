@@ -261,6 +261,7 @@ MonoBehaviour:
   color: 0
   view: {fileID: 9212175779826650880}
   dir: {x: 0, y: 0}
+  isExpired: 0
 --- !u!114 &9212175779826650880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modal: {fileID: 7530044279479584224}
   lr: {fileID: 8026477943891562601}
+  interactSFX: {fileID: 11400000, guid: 9af6991188c27de4e937573af602824b, type: 2}
 --- !u!114 &853598008421522868
 MonoBehaviour:
   m_ObjectHideFlags: 0

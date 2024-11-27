@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class GrapeView : EntityView
 {
+    public SoundEffect eatenSFX;
+
     protected override void OnEnable() {
         base.OnEnable();
     }

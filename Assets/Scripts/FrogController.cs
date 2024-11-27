@@ -27,6 +27,9 @@ public class FrogController : MonoBehaviour
     }
 
     private void OnMouseDown() {
+        // play interaction sound effect
+        AudioManager.instance.PlaySound(view.interactSFX);
+
         // Get path for the tongue
         List<Vector3> tonguePath = GetTonguePath();
 

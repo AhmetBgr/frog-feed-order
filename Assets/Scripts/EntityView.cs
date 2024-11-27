@@ -7,6 +7,7 @@ using DG.Tweening;
 public class EntityView : MonoBehaviour
 {
     public EntityModal modal;
+    public SoundEffect punchScaleSFX;
 
     protected virtual void OnEnable() {
 
@@ -27,16 +28,22 @@ public class EntityView : MonoBehaviour
         if (targetColor != modal.color) return;
 
         if (tonguePathCoord.Contains(modal.coord)) {
-            AnimatePunchScale(Vector3.one * 0.5f, Game.tongueMoveDur, Game.tongueMoveDur * tonguePathCoord.IndexOf(modal.coord));
+            AnimatePunchScale(Vector3.one * 0.5f, Game.tongueMoveDur, Game.tongueMoveDur * tonguePathCoord.IndexOf(modal.coord), punchScaleSFX);
         }
     }
 
     // Default animation (can be overridden by subclasses)
-    public virtual void AnimatePunchScale(Vector3 scale, float duration, float delay = 0f) {
+    public virtual void AnimatePunchScale(Vector3 scale, float duration, float delay = 0f, SoundEffect sound = null) {
+        if(sound)
+            AudioManager.instance.PlaySound(sound, delay);
+
         transform.DOPunchScale(scale, duration, vibrato:1).SetDelay(delay);
     }
 
-    public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f, Action onComplete = null) {
+    public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f, Action onComplete = null, SoundEffect sound = null) {
+        if(sound)
+            AudioManager.instance.PlaySound(sound, delay);
+
         transform.DOScale(endValue, duration).SetDelay(delay).OnComplete(() => onComplete?.Invoke());
     }
 }

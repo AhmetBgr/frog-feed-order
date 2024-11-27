@@ -6,6 +6,7 @@ using UnityEngine;
 public class FrogView : EntityView
 {
     public LineRenderer lr;
+    public SoundEffect interactSFX;
     //public List<Vector3> tonguePath = new List<Vector3>();
     private float t = 0;
 
