@@ -15,6 +15,8 @@ public class Node : MonoBehaviour
 
     private void OnEnable() {
 
+        //LevelManager.OnLeveload += UpdateTopCell;
+
         Invoke("UpdateTopCell", 0.1f);
         Invoke("SubscribeOnExpire", 0.1f);
 
@@ -25,6 +27,9 @@ public class Node : MonoBehaviour
 
     private void OnDisable() {
         UnsubscribeOnExpire();
+
+        //LevelManager.OnLeveload -= UpdateTopCell;
+
     }
 
 
@@ -38,7 +43,7 @@ public class Node : MonoBehaviour
 
     }
 
-    private void UpdateTopCell() {
+    public void UpdateTopCell() {
         cells.Clear();
         for (int i = 0; i < transform.childCount; i++) {
             Cell cell = transform.GetChild(i).GetComponent<Cell>();

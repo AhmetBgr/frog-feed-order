@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour{
     static bool isLoading = false;
     [SerializeField] string levelToLoad;
 
+    public static event Action OnLeveload;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -66,14 +68,17 @@ public class LevelManager : MonoBehaviour{
         for (int i = 0; i < levelParent.childCount; i++) {
             currentLevelName = levelName;
 
-            GameObject node = levelParent.GetChild(i).gameObject;
+            Node node = levelParent.GetChild(i).GetComponent<Node>();
             LevelLoader.InstantiateCells(serializedLevel.nodeObjects[i], gridManager.cellPrefabs, node.transform);
+
+            node.UpdateTopCell();
         }
 
         foreach (Transform node in levelParent) {
 
         }
 
+        OnLeveload?.Invoke();
 
         /*currentLevelName = levelName;
         SerializedLevel serializedLevel = LevelLoader.LoadLevel(currentLevelName);

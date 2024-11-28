@@ -11,7 +11,9 @@ using System.IO;
 
 //[CustomEditor(typeof(GridController))]
 public class LevelEditor : EditorWindow {
-	public GridController gridController;
+	[SerializeField] public GridController gridController;
+	[SerializeField] public LevelManager levelManager;
+
 
 	int selGridInt = 0;
 	int selGridInt2 = 0;
@@ -21,6 +23,8 @@ public class LevelEditor : EditorWindow {
 
 	string newLevelName;
 
+	List<string> savedLevels => Utils.allLevels;
+	int savedLevelIndex = 0;
 	Event e;
 	bool in2DMode;
 	string currentLevel;
@@ -49,9 +53,12 @@ public class LevelEditor : EditorWindow {
 
     void OnEnable() {
 		SceneView.duringSceneGui += SceneGUI;
+		EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 		//Selection.selectionChanged += ApplyAction;
 
 		gridController = FindAnyObjectByType<GridController>();
+		levelManager = FindAnyObjectByType<LevelManager>();
+
 
 		List<string> selectStringsTmp = new List<string>();
 		selectStringsTmp.Add("None");
@@ -77,12 +84,15 @@ public class LevelEditor : EditorWindow {
 
 	void OnDisable() {
 		SceneView.duringSceneGui -= SceneGUI;
+		EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
 		//Selection.selectionChanged -= ApplyAction;
 	}
 
 
 
 	void OnValidate() {
+
 		refreshPrefabs = true;
 	}
 
@@ -169,6 +179,21 @@ public class LevelEditor : EditorWindow {
 
 			SaveToDisk(newLevelName);
 		}
+
+		BigSpace();
+		BigSpace();
+
+		EditorGUILayout.BeginHorizontal();
+		if (GUILayout.Button("Load Level", GUILayout.Width(150))) {
+
+			currentLevel = savedLevels[savedLevelIndex];
+			LoadFromDisk(currentLevel);
+			//Refresh();
+
+		}
+		savedLevelIndex = EditorGUILayout.Popup(savedLevelIndex, savedLevels.ToArray());
+		EditorGUILayout.EndHorizontal();
+
 
 		EditorGUILayout.EndScrollView();
 		GUILayout.EndVertical();
@@ -260,27 +285,6 @@ public class LevelEditor : EditorWindow {
 		return Vector3.zero;
 	}
 
-	/*public void CreateGUI() {
-		// Each editor window contains a root VisualElement object
-		VisualElement root = rootVisualElement;
-
-		// VisualElements objects can contain other VisualElement following a tree hierarchy
-		Label label = new Label("Hello World!");
-		root.Add(label);
-
-		// Create button
-		Button button = new Button();
-		button.name = "button";
-		button.text = "Button";
-		root.Add(button);
-
-		// Create toggle
-		Toggle toggle = new Toggle();
-		toggle.name = "toggle";
-		toggle.label = "Toggle";
-		root.Add(toggle);
-	}*/
-
 	void SaveToDisk(string levelName) {
 
 		if (!System.IO.Directory.Exists(levelPath)) {
@@ -296,6 +300,15 @@ public class LevelEditor : EditorWindow {
 		AssetDatabase.Refresh();
 
 		//isDirty = false;
+	}
+
+	void LoadFromDisk(string levelName) {
+
+		if (string.IsNullOrWhiteSpace(levelName)) {
+			return;
+		}
+
+		levelManager.LoadLevel(gridController.transform, levelName);
 	}
 
 	EntityColor GetEntityColor(int index) {
@@ -331,5 +344,19 @@ public class LevelEditor : EditorWindow {
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
+	}
+
+	void RefreshReferences() {
+		if (gridController == null) {
+			gridController = FindAnyObjectByType<GridController>();
+		}
+		if (levelManager == null) {
+			levelManager = FindAnyObjectByType<LevelManager>();
+		}
+	}
+	void OnPlayModeStateChanged(PlayModeStateChange state) {
+		if (state == PlayModeStateChange.EnteredEditMode) {
+			RefreshReferences();
+		}
 	}
 }
