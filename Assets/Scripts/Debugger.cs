@@ -24,7 +24,7 @@ public class Debugger : MonoBehaviour
             }
             else {
                 resetTargetFps = true;
-                Application.targetFrameRate = 15;
+                Application.targetFrameRate = 75;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Backspace)) {

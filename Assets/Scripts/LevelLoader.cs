@@ -5,10 +5,16 @@ public class LevelLoader {
     static int levelIndex = 0;
     static List<string> allLevels => Utils.allLevels;
 
-    public static SerializedLevel LoadLevel(string levelName) {
+    public static SerializedLevel LoadLevel(TextAsset textFile) {
+        //SetLevelIndexByName(levelName);
+        //TextAsset textFile = Resources.Load<TextAsset>("Levels/" + levelName);
+        return JsonUtility.FromJson<SerializedLevel>(textFile.text);
+    }
+
+    public static TextAsset LoadLevelTextFile(string levelName) {
         SetLevelIndexByName(levelName);
         TextAsset textFile = Resources.Load<TextAsset>("Levels/" + levelName);
-        return JsonUtility.FromJson<SerializedLevel>(textFile.text);
+        return textFile;
     }
 
     public static void InstantiateCells(SerializedNodeObject serializedNodeObject, GameObject[] prefabs, Transform node) {
@@ -25,7 +31,7 @@ public class LevelLoader {
         }
     }
 
-    public static SerializedLevel LoadNextLevel() {
+    /*public static SerializedLevel LoadNextLevel() {
         levelIndex++;
         if (levelIndex >= allLevels.Count) {
             levelIndex = 0;
@@ -36,7 +42,7 @@ public class LevelLoader {
         else {
             return LoadLevel(allLevels[levelIndex]);
         }
-    }
+    }*/
 
     static void SetLevelIndexByName(string levelName) {
         for (int i = 0; i < allLevels.Count; i++) {

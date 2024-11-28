@@ -78,6 +78,21 @@ public class GridController : MonoBehaviour
         return nodesGrid[coord.x, coord.y].topCell.entity;
     }
 
+    public EntityModal GetUnvisitedEntity(Vector2Int coord) {
+
+        Debug.Log("coord: " + coord);
+
+        if (coord.x >= 5 | coord.y >= 5) return null;
+
+        if (coord.x < 0 | coord.y < 0) return null;
+
+
+        
+
+
+        return nodesGrid[coord.x, coord.y].topCell.entity;
+    }
+
 
     public Vector2Int GetNextCoord(Vector2Int fromCoord, Vector2Int dir) {
         Vector2Int nextCoord = new Vector2Int(fromCoord.x + dir.x, fromCoord.y - dir.y);

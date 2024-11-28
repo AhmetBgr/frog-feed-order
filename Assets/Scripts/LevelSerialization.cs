@@ -8,9 +8,9 @@ public class SerializedLevel {
     //public List<SerializedLevelObject> LevelObjects;
 
     public List<SerializedNodeObject> nodeObjects;
+    public int movesCount;
 
-
-    public SerializedLevel(GameObject level) {
+    public SerializedLevel(GameObject level, int movesCount) {
         nodeObjects = new List<SerializedNodeObject>();
 
         foreach (Transform node in level.transform) {
@@ -27,7 +27,7 @@ public class SerializedLevel {
 
             nodeObjects.Add(serializedNodeObject);
         }
-
+        this.movesCount = movesCount;
 
         /*foreach (Transform child in level.transform) {
             LevelObjects.Add(new SerializedLevelObject(child));

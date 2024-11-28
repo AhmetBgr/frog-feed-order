@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.IO;
 
-
-//[CustomEditor(typeof(GridController))]
 public class LevelEditor : EditorWindow {
 	[SerializeField] public GridController gridController;
 	[SerializeField] public LevelManager levelManager;
@@ -22,6 +20,7 @@ public class LevelEditor : EditorWindow {
 	string[] selectStrings2;
 
 	string newLevelName;
+	int movesCount;
 
 	List<string> savedLevels => Utils.allLevels;
 	int savedLevelIndex = 0;
@@ -155,6 +154,13 @@ public class LevelEditor : EditorWindow {
 		DrawingWindow();
 
 		BigSpace();
+
+		EditorGUILayout.BeginHorizontal();
+		//EditorGUILayout.LabelField("level name");
+		GUILayout.Label("Moves Count: ");
+		movesCount = EditorGUILayout.IntField(movesCount);
+		EditorGUILayout.EndHorizontal();
+
 		BigSpace();
 
 
@@ -164,8 +170,9 @@ public class LevelEditor : EditorWindow {
 		}
 
 		BigSpace();
-		BigSpace();
+		HorizontalLine();
 
+		BigSpace();
 
 		EditorGUILayout.BeginHorizontal();
 		//EditorGUILayout.LabelField("level name");
@@ -181,8 +188,9 @@ public class LevelEditor : EditorWindow {
 		}
 
 		BigSpace();
-		BigSpace();
+		HorizontalLine();
 
+		BigSpace();
 		EditorGUILayout.BeginHorizontal();
 		if (GUILayout.Button("Load Level", GUILayout.Width(150))) {
 
@@ -247,7 +255,7 @@ public class LevelEditor : EditorWindow {
 
 		GUILayout.Label("Select Action: ", EditorStyles.boldLabel);
 
-		selGridInt = GUILayout.SelectionGrid(selGridInt, selectStrings, selectStrings.Length, GUILayout.Width(470));
+		selGridInt = GUILayout.SelectionGrid(selGridInt, selectStrings, selectStrings.Length/2, GUILayout.Height(120));
 
 
 		BigSpace();
@@ -260,7 +268,7 @@ public class LevelEditor : EditorWindow {
 
 		GUILayout.Label("Choose Color:", EditorStyles.boldLabel);
 
-		selGridInt2 = GUILayout.SelectionGrid(selGridInt2, selectStrings2, selectStrings2.Length, GUILayout.Width(370));
+		selGridInt2 = GUILayout.SelectionGrid(selGridInt2, selectStrings2, selectStrings2.Length, GUILayout.Height(30));
 
 	}
 
@@ -269,12 +277,17 @@ public class LevelEditor : EditorWindow {
 
 		RaycastHit hit = new RaycastHit();
 		if (Physics.Raycast(ray, out hit, 100.0f)) {
-			Vector3 pos = hit.point + (hit.normal * 1f);
+			//Vector3 pos = hit.point + (hit.normal * 1f);
+			Vector3 pos = hit.transform.position + (hit.normal.normalized);
+
 			/*if (selGridInt == 1) {
 				pos = hit.transform.position;
 			}*/
 			return Utils.Vec3ToInt(pos);
 		}
+
+		//return Vector3.zero;
+
 
 		Plane hPlane = new Plane(Vector3.forward, Vector3.zero);
 		float distance = 0;
@@ -293,7 +306,7 @@ public class LevelEditor : EditorWindow {
 
 		string path = levelPath + levelName + ".json";
 		StreamWriter writer = new StreamWriter(path, false);
-		writer.WriteLine(JsonUtility.ToJson(new SerializedLevel(gridController.gameObject)));
+		writer.WriteLine(JsonUtility.ToJson(new SerializedLevel(gridController.gameObject, movesCount)));
 		writer.Close();
 		AssetDatabase.ImportAsset(path);
 		//RefreshSavedLevels();
@@ -308,7 +321,9 @@ public class LevelEditor : EditorWindow {
 			return;
 		}
 
-		levelManager.LoadLevel(gridController.transform, levelName);
+		levelManager.LoadLevel(gridController.transform, LevelLoader.LoadLevelTextFile(levelName));
+
+		movesCount = levelManager.curSerializedLevel.movesCount;
 	}
 
 	EntityColor GetEntityColor(int index) {

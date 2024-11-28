@@ -25,6 +25,7 @@ public class EntityModal : MonoBehaviour
     public EntityColor color;
     public EntityView view;
     public Vector2Int dir;
+    //public bool isVisited = false;
 
     public bool isExpired = false;
 

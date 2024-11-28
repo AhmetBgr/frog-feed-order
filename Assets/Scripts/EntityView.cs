@@ -40,6 +40,13 @@ public class EntityView : MonoBehaviour
         transform.DOPunchScale(scale, duration, vibrato:1).SetDelay(delay);
     }
 
+    public virtual void AnimatePunchPos(Vector3 dir, float duration, float delay = 0f, SoundEffect sound = null) {
+        if (sound)
+            AudioManager.instance.PlaySound(sound, delay);
+
+        transform.DOPunchPosition(dir, duration, vibrato: 1).SetDelay(delay);
+    }
+
     public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f, Action onComplete = null, SoundEffect sound = null) {
         if(sound)
             AudioManager.instance.PlaySound(sound, delay);

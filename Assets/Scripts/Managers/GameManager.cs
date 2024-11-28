@@ -44,30 +44,47 @@ public class GameManager : MonoBehaviour
     private void Start() {
         movesCount = _movesCount; // makes sure value given in inspector is triggered for event
 
+        //Reset(0);
+    }
+
+    private void OnEnable() {
+        FrogController.OnInteracted += DecreaseMoveCount;
+        FrogModal.onFrogExpire += CheckforLevelComplete;
+        LevelManager.OnLeveload += Reset;
+    }
+
+    private void OnDisable() {
+        FrogController.OnInteracted -= DecreaseMoveCount;
+        FrogModal.onFrogExpire -= CheckforLevelComplete;
+        LevelManager.OnLeveload -= Reset;
+
+    }
+
+    private void Reset(int levelIndex) {
+        Game.state = State.Playing;
+
+
+        frogs.Clear();
+
         FrogModal[] frogsArray = FindObjectsOfType<FrogModal>(true);
 
         foreach (var item in frogsArray) {
             frogs.Add(item);
         }
 
-        Game.state = State.Playing;
-    }
 
-    private void OnEnable() {
-        FrogController.OnInteracted += DecreaseMoveCount;
-        FrogModal.onFrogExpire += CheckforLevelComplete;
-    }
-
-    private void OnDisable() {
-        FrogController.OnInteracted -= DecreaseMoveCount;
-        FrogModal.onFrogExpire -= CheckforLevelComplete;
-
+        movesCount = LevelManager.instance.curSerializedLevel.movesCount;
     }
 
     private void TriggerOnMoveCountChanged() {
+
+
         OnMovesCountChanged?.Invoke(movesCount);
 
-        //Debug.Log("move count:" + movesCount);
+        Debug.Log("shoud trigger on move count chenged:" + movesCount);
+
+
+
     }
 
     private void DecreaseMoveCount() {
