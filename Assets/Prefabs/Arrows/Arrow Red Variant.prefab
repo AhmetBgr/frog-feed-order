@@ -59,6 +59,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arrow Red Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8685421329001186379, guid: ab07f186b3e48a3499872e876300c93d,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 01d0ad9d462a0ab4696acf5f6fcdfa89,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

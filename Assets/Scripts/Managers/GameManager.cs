@@ -2,10 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<FrogModal> frogs = new List<FrogModal>();
+
+    //public FrogModal[] frogs;
 
     [SerializeField] private int _movesCount;
 
@@ -38,6 +43,14 @@ public class GameManager : MonoBehaviour
 
     private void Start() {
         movesCount = _movesCount; // makes sure value given in inspector is triggered for event
+
+        FrogModal[] frogsArray = FindObjectsOfType<FrogModal>(true);
+
+        foreach (var item in frogsArray) {
+            frogs.Add(item);
+        }
+
+        Game.state = State.Playing;
     }
 
     private void OnEnable() {
@@ -64,7 +77,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void CheckForGameOver() {
-        if (movesCount <= 0 && Game.state != State.LevelComplete) {
+        if (movesCount <= 0) {
             // Lose Condition
             Game.SetState(State.GameOver);
             AudioManager.instance.PlaySound(gameOverSFX);
@@ -88,6 +101,30 @@ public class GameManager : MonoBehaviour
     }
 
     public void AddToFrogsPool(FrogModal frog) {
+        if (frogs.Contains(frog)) return;
+
         frogs.Add(frog);
+
+        #if UNITY_EDITOR
+        
+        EditorUtility.SetDirty(this);
+        EditorSceneManager.MarkSceneDirty(gameObject.scene);
+        EditorSceneManager.SaveOpenScenes();
+        
+        #endif
+    }
+    public void RemoveFromFrogsPool(FrogModal frog) {
+        if (!frogs.Contains(frog)) return;
+
+
+        frogs.Remove(frog);
+
+#if UNITY_EDITOR
+
+        EditorUtility.SetDirty(this);
+        EditorSceneManager.MarkSceneDirty(gameObject.scene);
+        EditorSceneManager.SaveOpenScenes();
+
+#endif
     }
 }

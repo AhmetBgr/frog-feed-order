@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class Utils : MonoBehaviour
 {
-	public static Vector3Int Vec3ToInt(Vector3 v) {
+    private static List<string> allLevelsRef;
+    public static List<string> allLevels {
+        get {
+            if (allLevelsRef == null) {
+                allLevelsRef = new List<string>();
+                Object[] levels = Resources.LoadAll("Levels");
+                foreach (Object t in levels) {
+                    allLevelsRef.Add(t.name);
+                }
+            }
+            return allLevelsRef;
+        }
+    }
+
+    public static Vector3Int Vec3ToInt(Vector3 v) {
 		return Vector3Int.RoundToInt(v);
 	}
 

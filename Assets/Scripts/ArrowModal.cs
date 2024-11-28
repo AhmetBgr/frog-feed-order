@@ -7,8 +7,10 @@ public class ArrowModal : EntityModal
     protected override void Start() {
         base.Start();
 
+        Transform transformToGetRot = transform.parent ? transform.parent : transform;
+
         // Update direction
-        switch (transform.rotation.eulerAngles.y) {
+        switch (transformToGetRot.rotation.eulerAngles.y) {
             case 0f:
             dir = Vector2Int.down;
             break;

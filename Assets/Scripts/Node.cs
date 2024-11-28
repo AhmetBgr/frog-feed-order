@@ -12,10 +12,15 @@ public class Node : MonoBehaviour
 
     private static GridController gridController;
 
-    private void OnEnable() {
-        UpdateTopCell();
 
-        SubscribeOnExpire();
+    private void OnEnable() {
+
+        Invoke("UpdateTopCell", 0.1f);
+        Invoke("SubscribeOnExpire", 0.1f);
+
+        //UpdateTopCell();
+
+        //SubscribeOnExpire();
     }
 
     private void OnDisable() {
@@ -25,8 +30,10 @@ public class Node : MonoBehaviour
 
     void Start()
     {
+
         if(gridController == null && transform.parent != null)
             transform.parent.TryGetComponent(out gridController);
+
 
 
     }
@@ -34,7 +41,14 @@ public class Node : MonoBehaviour
     private void UpdateTopCell() {
         cells.Clear();
         for (int i = 0; i < transform.childCount; i++) {
-            cells.Add(transform.GetChild(i).GetComponent<Cell>());
+            Cell cell = transform.GetChild(i).GetComponent<Cell>();
+
+
+            if (i < transform.childCount - 1) {
+                cell.entity?.gameObject.SetActive(false);
+            }
+
+            cells.Add(cell);
         }
 
         topCell = cells[cells.Count - 1];
@@ -96,13 +110,12 @@ public class Node : MonoBehaviour
 
         if (!Application.isPlaying) {
             EditorUtility.SetDirty(cell.gameObject);
+
             EditorSceneManager.MarkSceneDirty(gameObject.scene);
             EditorSceneManager.SaveOpenScenes();
         }
 
         cells.Remove(cell);
-
-
 
         DestroyImmediate(transform.GetChild(transform.childCount - 1).gameObject);
 
@@ -128,6 +141,7 @@ public class Node : MonoBehaviour
 
         topCell = cell.GetComponent<Cell>();
 
+
         cells.Add(topCell);
         /*cells.Add(cell.GetComponent<Cell>());
 
@@ -138,6 +152,7 @@ public class Node : MonoBehaviour
 
         if (!Application.isPlaying) {
             EditorUtility.SetDirty(topCell.gameObject);
+
             EditorSceneManager.MarkSceneDirty(gameObject.scene);
             EditorSceneManager.SaveOpenScenes();
         }

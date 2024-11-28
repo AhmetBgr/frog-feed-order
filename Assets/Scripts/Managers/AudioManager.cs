@@ -24,17 +24,17 @@ public class AudioManager : MonoBehaviour{
 
         if (sound == null | audioSource == null) return;
 
-        StartCoroutine(PlaySoundWithDelay(sound, delay, playReverse)); 
+        StartCoroutine(PlaySoundWithDelay(sound, delay, audioSource, playReverse)); 
         //audioSource.PlayOneShot(sound);
     }
 
 
     private IEnumerator PlaySoundWithDelay(SoundEffect sound,
-        float delay, bool playReverse = false) {
+        float delay, AudioSource audioSource, bool playReverse = false) {
 
         yield return new WaitForSeconds(delay);
 
-        sound.Play();
+        sound.Play(audioSource);
 
         //PlaySound(sound, playReverse);
     }

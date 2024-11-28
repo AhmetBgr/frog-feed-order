@@ -19,11 +19,13 @@ public class LevelEditor : EditorWindow {
 	string[] selectStrings;
 	string[] selectStrings2;
 
+	string newLevelName;
 
 	Event e;
 	bool in2DMode;
 	string currentLevel;
 	static string textFilePath => Application.dataPath + "/leveleditorprefabs.txt";
+	string levelPath => Application.dataPath + "/Resources/Levels/";
 
 	public GameObject[] prefabs;
 	Vector2 scrollPos;
@@ -153,9 +155,19 @@ public class LevelEditor : EditorWindow {
 
 		BigSpace();
 		BigSpace();
-		
-		if (GUILayout.Button("Save Scene")) {
-			SaveScene();
+
+
+		EditorGUILayout.BeginHorizontal();
+		//EditorGUILayout.LabelField("level name");
+		GUILayout.Label("LEVEL NAME: ");
+		newLevelName = EditorGUILayout.TextField(newLevelName);
+		EditorGUILayout.EndHorizontal();
+		BigSpace();
+
+		if (GUILayout.Button("Save Level")) {
+			//SaveScene();
+
+			SaveToDisk(newLevelName);
 		}
 
 		EditorGUILayout.EndScrollView();
@@ -186,9 +198,9 @@ public class LevelEditor : EditorWindow {
 
 			if (!entity || entity.type == EntityType.Grape ) return;
 
-			Vector3 angles = entity.transform.rotation.eulerAngles;
+			Vector3 angles = node.topCell.transform.rotation.eulerAngles;
 
-			entity.transform.eulerAngles = new Vector3(angles.x, (angles.y + 90)%360, angles.z);
+			node.topCell.transform.eulerAngles = new Vector3(angles.x, (angles.y + 90)%360, angles.z);
 		}
 		else if (selGridInt == 3) {
 			node.AddCell(EntityType.Grape, GetEntityColor(selGridInt2));
@@ -268,6 +280,23 @@ public class LevelEditor : EditorWindow {
 		toggle.label = "Toggle";
 		root.Add(toggle);
 	}*/
+
+	void SaveToDisk(string levelName) {
+
+		if (!System.IO.Directory.Exists(levelPath)) {
+			System.IO.Directory.CreateDirectory(levelPath);
+		}
+
+		string path = levelPath + levelName + ".json";
+		StreamWriter writer = new StreamWriter(path, false);
+		writer.WriteLine(JsonUtility.ToJson(new SerializedLevel(gridController.gameObject)));
+		writer.Close();
+		AssetDatabase.ImportAsset(path);
+		//RefreshSavedLevels();
+		AssetDatabase.Refresh();
+
+		//isDirty = false;
+	}
 
 	EntityColor GetEntityColor(int index) {
 		EntityColor entityColor = EntityColor.Blue;

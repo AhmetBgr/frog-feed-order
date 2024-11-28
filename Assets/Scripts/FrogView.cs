@@ -46,9 +46,9 @@ public class FrogView : EntityView
                 yield return null;
             }
         }
+        yield return new WaitForSecondsRealtime(segmentDuration / 2);
 
-
-        yield return new WaitForSeconds(segmentDuration * Time.deltaTime * 20f);
+        ///yield return new WaitForSeconds(segmentDuration ); //* Time.deltaTime * 20f
 
         // Retract tongue anim
 

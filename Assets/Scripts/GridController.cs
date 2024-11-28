@@ -9,6 +9,9 @@ public class GridController : MonoBehaviour
 {
     public Cell[] cellPrefabPools;
 
+    public GameObject[] cellPrefabs;
+
+
     public static Node[,] nodesGrid = new Node[5,5];
 
     public GameObject nodePrefab;

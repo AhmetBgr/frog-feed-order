@@ -12,11 +12,26 @@ public class FrogController : MonoBehaviour
 
     private GridController gridController;
 
+    private bool isBusy = false;
+
     //public delegate void OnTongueMoveDelegate(List<Vector2Int> tonguePathCoord);
     public static event Action OnInteracted;
     public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
 
+
+
+    private void Awake() {
+        //GameManager.instance.AddToFrogsPool(modal);
+
+    }
+
+    private void OnDisable() {
+        // this is to make sure to initially inactive frogs to be added
+        // already added frogs are skipped 
+        //GameManager.instance.AddToFrogsPool(modal);
+
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -27,22 +42,24 @@ public class FrogController : MonoBehaviour
     }
 
     private void OnMouseDown() {
+        if (isBusy || Game.state != State.Playing) return;
+
+        isBusy = true;
+
         // play interaction sound effect
         AudioManager.instance.PlaySound(view.interactSFX);
 
         // Get path for the tongue
         List<Vector3> tonguePath = GetTonguePath();
 
-        if (tonguePath.Count <= 1) return;
+        OnInteracted?.Invoke();
 
         // Play anim        
-        view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur);
+        view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, () => { isBusy = false; });
 
     }
 
     private List<Vector3> GetTonguePath() {
-        modal.isExpired = true;
-        OnInteracted?.Invoke();
 
         List<Vector3> tonguePath = new List<Vector3>();
         tonguePath.Add(transform.position);
@@ -87,11 +104,13 @@ public class FrogController : MonoBehaviour
         }
 
         // Check if eating is succesfull
-        if (!nextEntity || (nextEntity.type != EntityType.Frog && nextEntity.color == modal.color)) {
+        if (!nextEntity || (nextEntity.type == EntityType.Frog)) {
+            modal.isExpired = true;
+
             // Trigger event
             OnSuccessfullEat?.Invoke(tonguePathCoord, tonguePath);
 
-            StartCoroutine(modal.TriggerOnExpire((tonguePath.Count - 1) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
+            StartCoroutine(modal.TriggerOnExpire((tonguePath.Count - 0.5f) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
 
             //view.AnimateScale(Vector3.zero, 0.5f, (tonguePath.Count-1) * Game.tongueMoveDur * 2 + Game.tongueMoveDur);
         }
