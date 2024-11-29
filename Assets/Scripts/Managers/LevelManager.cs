@@ -134,16 +134,12 @@ public class LevelManager : MonoBehaviour{
 
         foreach (var serializedCellObject in serializedNodeObject.cellObjects) {
 
-            /*GameObject go = null;
-            if (Application.isPlaying) {
-                go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""), serializedCellObject.pos, serializedCellObject.angles);
-                if (go == null)
-                    Debug.LogError("objectPooler returned null");
-            }
-            //else
-                //go = GameObject.Instantiate(prefab) as GameObject;
-
-            //go = GameObject.Instantiate(prefab) as GameObject;
+            GameObject go = null;
+            
+            go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""));
+            
+            if (go == null)
+                Debug.LogError("objectPooler returned null");
 
             go.transform.parent = node;
             go.transform.localPosition = serializedCellObject.pos;
@@ -153,10 +149,10 @@ public class LevelManager : MonoBehaviour{
             IPoolableObject poolable = go.GetComponent<IPoolableObject>();
             if (poolable != null) {
                 poolable.OnObjectSpawn();
-            }*/
+            }
 
 
-            foreach (GameObject prefab in prefabs) {
+            /*foreach (GameObject prefab in prefabs) {
                 if (prefab.transform.name == serializedCellObject.prefab) {
                     var go = GameObject.Instantiate(prefab) as GameObject;
 
@@ -165,7 +161,7 @@ public class LevelManager : MonoBehaviour{
                     go.transform.localEulerAngles = serializedCellObject.angles;
 
                 }
-            }
+            }*/
         }
     }
 

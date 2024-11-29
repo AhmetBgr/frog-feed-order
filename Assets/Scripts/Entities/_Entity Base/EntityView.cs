@@ -8,21 +8,25 @@ public class EntityView : MonoBehaviour
 {
     public EntityModal modal;
     public SoundEffect punchScaleSFX;
+    public SoundEffect entityDenySFX;
+
 
     protected virtual void OnEnable() {
 
-        FrogController.OnTongueMove += HandleAnimateEntity;
+        FrogController.OnTongueMove += PlayPunchScaleAnim;
+        
+        // Setup scale anim
         transform.localScale = Vector3.zero;
-
+        
         AnimateScale(Vector3.one, 0.5f);
     }
 
     protected virtual void OnDisable() {
-        FrogController.OnTongueMove -= HandleAnimateEntity;
+        FrogController.OnTongueMove -= PlayPunchScaleAnim;
     }
 
     // Handle the event when it's triggered
-    private void HandleAnimateEntity(List<Vector2Int> tonguePathCoord, EntityColor targetColor) {
+    private void PlayPunchScaleAnim(List<Vector2Int> tonguePathCoord, EntityColor targetColor) {
         if (targetColor != modal.color) return;
 
         if (tonguePathCoord.Contains(modal.coord)) {

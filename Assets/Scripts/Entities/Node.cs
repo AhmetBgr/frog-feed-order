@@ -4,40 +4,15 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-public class Node : MonoBehaviour
-{
+public class Node : MonoBehaviour{
 
     public List<Cell> cells = new List<Cell>();
     public Cell topCell;
 
     private static GridManager gridManager;
 
-
-    private void OnEnable() {
-
-        //LevelManager.OnLeveload += UpdateTopCell;
-
-        //Invoke("UpdateTopCell", 0.1f);
-        Invoke("SubscribeOnExpire", 0.1f);
-
-        //UpdateTopCell();
-
-        //SubscribeOnExpire();
-    }
-
-    private void OnDisable() {
-        UnsubscribeOnExpire();
-
-        //LevelManager.OnLeveload -= UpdateTopCell;
-
-    }
-
-
     void Start(){
         gridManager = GridManager.instance;
-    }
-    public void UpdateTopCell(int curlevelIndex = 0) {
-        Invoke("UpdateTopCell", 0.08f);
     }
     public void UpdateTopCell() {
         cells.Clear();
@@ -55,36 +30,11 @@ public class Node : MonoBehaviour
         topCell = cells[cells.Count - 1];
 
     }
-
-    private void SubscribeOnExpire() {
-        if (topCell.entity == null) {
-
-            //Debug.LogWarning("tried to subscribe base cell entity");
-            return; // dont remove the base cell
-
-        }
-        topCell.entity.OnExpire += RemoveTopCell;
-    }
-
-    private void UnsubscribeOnExpire() {
-        if (!topCell.entity) return;
-
-        topCell.entity.OnExpire -= RemoveTopCell;
-    }
     public void RemoveTopCell() {
-        UnsubscribeOnExpire();
-
-
         if (topCell.entity == null) {
-
             Debug.LogWarning("tried to remove base cell");
-            return; // dont remove the base cell
+            return;
         }
-
-
-        topCell.AnimateScale();
-
-
         cells.RemoveAt(cells.Count - 1);
 
         topCell = cells[cells.Count - 1];
@@ -92,15 +42,10 @@ public class Node : MonoBehaviour
         if (!topCell.entity) return;
 
         topCell.entity.gameObject.SetActive(true);
-
-        SubscribeOnExpire();
-
     }
 
     public void DeleteTopCell() {
         UpdateTopCell();
-
-
         if (transform.childCount <= 1) return;
 
         if (cells.Count >= 3) {

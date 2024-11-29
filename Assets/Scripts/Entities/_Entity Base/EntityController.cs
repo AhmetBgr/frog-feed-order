@@ -5,4 +5,5 @@ using UnityEngine;
 public class EntityController : MonoBehaviour
 {
     public Cell cell;
+
 }

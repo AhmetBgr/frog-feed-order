@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FrogView : EntityView
-{
-    public LineRenderer lr;
-    public SoundEffect interactSFX;
-    public SoundEffect grapeDenySFX;
+public class FrogView : EntityView{
 
-    //public List<Vector3> tonguePath = new List<Vector3>();
+    [SerializeField] private LineRenderer lr;
+    public SoundEffect interactSFX;
+
     private float t = 0;
 
     // Trigger tongue animation
@@ -19,17 +17,17 @@ public class FrogView : EntityView
 
     private IEnumerator TongueAnim(List<Vector3> tonguePath, float segmentDuration, Action onCompleteCallBack = null) {
         // Extent tongue anim
-        lr.gameObject.SetActive(true);
-        int pointsCount = tonguePath.Count;
-        lr.positionCount = pointsCount;
 
+        int pointsCount = tonguePath.Count;
+
+        // Setup line renderer points
+        lr.gameObject.SetActive(true);
+        lr.positionCount = pointsCount;
         for (int i = 0; i < pointsCount; i++) {
             lr.SetPosition(i, tonguePath[0]);
         }
 
-        int piece = (1 * pointsCount - 1);
-        //float segmentDuration = dur / piece;
-
+        // for each loop, it's lerping all points that didn't reach desired tongue path point
         for (int i = 0; i < pointsCount - 1; i++) {
             float startTime = Time.time;
 
@@ -41,24 +39,20 @@ public class FrogView : EntityView
                 t = segmentDuration == 0 ? 1 : ((Time.time - startTime) / segmentDuration);
                 pos = Vector3.Lerp(startPosition, endPosition, t);
 
-                // animate all other points except point at index i
+                // Animate all other points except points before index i
+                // Points before index i are reached the desried point
                 for (int j = i + 1; j < pointsCount; j++) {
                     lr.SetPosition(j, pos);
                 }
+
                 yield return null;
             }
         }
         yield return new WaitForSecondsRealtime(segmentDuration / 2);
 
-        ///yield return new WaitForSeconds(segmentDuration ); //* Time.deltaTime * 20f
-
         // Retract tongue anim
 
-        float totalLenght = 0f;
-        for (int i = pointsCount - 1; i > 0; i--) {
-            totalLenght += (tonguePath[i] - tonguePath[i - 1]).magnitude;
-        }
-
+        // for each loop, it's lerping all points that didn't reach desired tongue path point
         for (int i = pointsCount - 1; i >= 1; i--) {
             float startTime = Time.time;
 
@@ -66,14 +60,12 @@ public class FrogView : EntityView
             Vector3 endPosition = tonguePath[i];
             Vector3 pos = endPosition;
 
-            float pieceLength = (endPosition - startPosition).magnitude;
-            //segmentDuration = dur * (pieceLength / totalLenght);
-
             while (pos != startPosition) {
                 float t = (Time.time - startTime) / segmentDuration;
                 pos = Vector3.Lerp(endPosition, startPosition, t);
 
-                // animate all other points except point at index i
+                // Animate all other points except points before index i
+                // Points before index i are reached the desried point
                 for (int j = i; j < pointsCount; j++) {
                     lr.SetPosition(j, pos);
                 }
@@ -81,14 +73,10 @@ public class FrogView : EntityView
             }
         }
 
+        // Trigger on complete event 
         if (onCompleteCallBack != null)
             onCompleteCallBack();
 
         lr.gameObject.SetActive(false);
-    }
-
-    public void DeactivateFrog() {
-        // Hide the frog or play deactivation animation
-
     }
 }

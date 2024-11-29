@@ -49,62 +49,31 @@ public class ObjectPooler : MonoBehaviour {
         }
     }
 
-    void Start() {
-
-    }
-
-    public GameObject SpawnFromPool(string tag, Vector3 position, Vector3 angles) {
+    public GameObject SpawnFromPool(string name) {
 
 
-        if (!poolDictionary.ContainsKey(tag)) {
-            Debug.LogError($"Pool with tag {tag} does not exist.");
+        if (!poolDictionary.ContainsKey(name)) {
+            Debug.LogError($"Pool with tag {name} does not exist.");
             return null;
         }
 
-        List<GameObject> objectPool = poolDictionary[tag];
+        List<GameObject> objectPool = poolDictionary[name];
 
         // If the pool is empty, attempt to dynamically resize
         if (objectPool.Count == 0) {
 
-            Debug.LogWarning($"Pool with tag {tag} is empty. Creating new object dynamically.");
-            GameObject newObject = Instantiate(pools.Find(pool => pool.prefab.name == tag).prefab);
+            Debug.LogWarning($"Pool with tag {name} is empty. Creating new object dynamically.");
+            GameObject newObject = Instantiate(pools.Find(pool => pool.prefab.name == name).prefab);
             newObject.name = newObject.name.Replace("(Clone)", "");
             newObject.SetActive(false);
-            objectPool.Add(newObject);
-            //objectPool.Enqueue(newObject); // Add the new object to the pool
-
-            /*Pool poolConfig = pools.Find(pool => pool.prefab.name == tag);
-
-            if (poolConfig != null) {
-                Debug.LogWarning($"Pool with tag {tag} is empty. Creating new object dynamically.");
-                GameObject newObject = Instantiate(poolConfig.prefab);
-                newObject.name = newObject.name.Replace("(Clone)", "");
-                newObject.SetActive(false);
-                objectPool.Add(newObject);
-                //objectPool.Enqueue(newObject); // Add the new object to the pool
-            }
-            else {
-                Debug.LogWarning($"Pool with tag {tag} cannot be resized. Consider increasing its initial size.");
-                return null;
-            }*/
+            poolDictionary[name].Add(newObject);
         }
 
 
-        GameObject objectToSpawn = objectPool.Find(pool => pool.name == tag);
-        poolDictionary[tag].Remove(objectToSpawn);
+        GameObject objectToSpawn = poolDictionary[name].Find(pool => pool.name == name);
+        poolDictionary[name].Remove(objectToSpawn);
 
-        //objectToSpawn.transform.localPosition = position;
-        //objectToSpawn.transform.localEulerAngles = angles;
-        //objectToSpawn.transform.GetChild(0).gameObject.SetActive(true);
         objectToSpawn.SetActive(true);
-
-        // Call the interface method if applicable
-        /*IPoolableObject poolable = objectToSpawn.GetComponent<IPoolableObject>();
-        if (poolable != null) {
-            poolable.OnObjectSpawn();
-        }*/
-
-        //poolDictionary[tag].Enqueue(objectToSpawn);
 
         return objectToSpawn;
     }
@@ -117,8 +86,15 @@ public class ObjectPooler : MonoBehaviour {
             return;
         }
 
-        objectToReturn.transform.SetParent(transform);
-        objectToReturn.SetActive(false);
+
         poolDictionary[tag].Add(objectToReturn);
+
+        objectToReturn.transform.SetParent(transform);
+        objectToReturn.transform.localPosition = Vector3.zero;
+        objectToReturn.transform.localEulerAngles = Vector3.zero;
+
+
+
+        objectToReturn.SetActive(false);
     }
 }

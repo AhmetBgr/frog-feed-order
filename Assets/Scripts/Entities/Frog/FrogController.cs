@@ -5,14 +5,13 @@ using UnityEngine;
 using DG.Tweening;
 
 public class FrogController : EntityController{
-    public FrogModal modal;
-    public FrogView view;
+    [SerializeField] private FrogModal modal;
+    [SerializeField] private FrogView view;
 
     private GridManager gridManager;
     private List<EntityModal> visitedEntities = new List<EntityModal>();
     private bool isBusy = false;
 
-    // Events
     public static event Action OnInteracted;
     public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
@@ -20,30 +19,25 @@ public class FrogController : EntityController{
     void Start(){
         modal.view = view;
         gridManager = GridManager.instance;
-
     }
 
     private void OnMouseDown() {
+        // Check if can be interacted
         if (isBusy || Game.state != State.Playing) return;
 
         isBusy = true;
 
-        //Play interaction sound effect
         AudioManager.instance.PlaySound(view.interactSFX);
 
-        // Get path for the tongue
         List<Vector3> tonguePath = GetTonguePath();
 
         OnInteracted?.Invoke();
-
-        // Play tongue move animation       
+ 
         view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, () => { isBusy = false; });
-
     }
 
     private List<Vector3> GetTonguePath() {
         visitedEntities.Clear();
-
 
         List<Vector3> tonguePath = new List<Vector3>();
         tonguePath.Add(transform.position);
@@ -70,14 +64,14 @@ public class FrogController : EntityController{
             tonguePath.Add(nextEntity.transform.position);
             tonguePathCoord.Add(Utils.PosToCoord(nextEntity.transform.position));
 
-            // Trigger animation 
-            //nextEntity.view.AnimatePunchScale(Vector3.one * 0.5f, 0.2f, delay);
             if (!IsValidEntity(nextEntity)) {
-                nextEntity.view.AnimatePunchPos(new Vector3(tongueDir.x, 0f, tongueDir.y)*0.3f, Game.tongueMoveDur, Game.tongueMoveDur * (tonguePath.Count-1), view.grapeDenySFX);
+                // Play deny feedback animation 
+                Vector3 dir = new Vector3(tongueDir.x, 0f, tongueDir.y) * 0.3f;
+                nextEntity.view.AnimatePunchPos(dir, Game.tongueMoveDur, Game.tongueMoveDur * (tonguePath.Count-1), nextEntity.view.entityDenySFX);
                 break;
             }
 
-            // change dir if next enitity is arrow iwth same color
+            // change dir if next enitity is arrow with the same color
             if(nextEntity.type == EntityType.Arrow && nextEntity.color == modal.color) {
                 tongueDir = nextEntity.dir;
             }
@@ -87,27 +81,31 @@ public class FrogController : EntityController{
             nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(nextEntity.coord, tongueDir));
         }
 
-        // Check if eating is succesfull
-        if (!nextEntity || nextEntity.type == EntityType.Frog || (nextEntity.type == EntityType.Grape && nextEntity.color == modal.color)) {
+        if (CanEat(nextEntity)) {
             modal.isExpired = true;
 
             // Trigger event
             OnSuccessfullEat?.Invoke(tonguePathCoord, tonguePath);
 
+            // Trigger expiration event with delay,
+            // delay is calculated based on tongue path long and unit move dur
             StartCoroutine(modal.TriggerOnExpire((tonguePath.Count - 0.5f) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
-
-            //view.AnimateScale(Vector3.zero, 0.5f, (tonguePath.Count-1) * Game.tongueMoveDur * 2 + Game.tongueMoveDur);
         }
 
+        // Trigger event
         OnTongueMove?.Invoke(tonguePathCoord, modal.color);
 
         return tonguePath;
     }
 
+    // Checks if entity is valid for tongue path
     private bool IsValidEntity(EntityModal entity) {
         return (entity.type == EntityType.Grape || entity.type == EntityType.Arrow) && entity.color == modal.color;
 
     }
 
-
+    // Checks if frog can succesfully eat
+    private bool CanEat(EntityModal entity) {
+        return !entity || entity.type == EntityType.Frog || (entity.type == EntityType.Grape && entity.color == modal.color);
+    }
 }

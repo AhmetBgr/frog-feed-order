@@ -64,14 +64,14 @@ public class GameManager : MonoBehaviour
         Game.state = State.Playing;
 
 
-        frogs.Clear();
+        /*frogs.Clear();
 
         FrogModal[] frogsArray = FindObjectsOfType<FrogModal>(true);
 
         foreach (var item in frogsArray) {
             frogs.Add(item);
         }
-        
+        */
 
         movesCount = LevelManager.instance.curSerializedLevel.movesCount;
     }
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         if (movesCount <= 0) {
             // Lose Condition
             Game.SetState(State.GameOver);
-            AudioManager.instance.PlaySound(gameOverSFX);
+            AudioManager.instance.PlaySound(gameOverSFX, delay: 0.2f);
             return;
         }
     }

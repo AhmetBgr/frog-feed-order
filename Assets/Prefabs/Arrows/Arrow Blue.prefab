@@ -68,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modal: {fileID: 3469422469043736317}
   punchScaleSFX: {fileID: 0}
+  entityDenySFX: {fileID: 11400000, guid: 6c3ac27e297bea84e88cb9c82579d5c5, type: 2}
 --- !u!114 &922619554381243674
 MonoBehaviour:
   m_ObjectHideFlags: 0

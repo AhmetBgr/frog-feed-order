@@ -18,7 +18,6 @@ public enum EntityColor {
 }
 
 public class EntityModal : MonoBehaviour{
-    public GameObject prefab;
     public Vector2Int coord;
     public EntityType type;
     public EntityColor color;
@@ -26,18 +25,32 @@ public class EntityModal : MonoBehaviour{
     public Vector2Int dir;
     public bool isExpired = false;
 
+    private Vector3 initPos;
+
     public event Action OnExpire;
+
+    private void Awake() {
+        initPos = transform.localPosition;
+
+    }
 
     protected virtual void Start() {
         // Find coord
         coord = Utils.PosToCoord(transform.position);
+
     }
 
     public virtual IEnumerator TriggerOnExpire(float delay = 0) {
 
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSecondsRealtime(delay);
 
         OnExpire?.Invoke();
+    }
+
+    public virtual void OnSpawn() {
+        isExpired = false;
+        transform.localPosition = initPos;
+        coord = Utils.PosToCoord(transform.position);
     }
 
 }

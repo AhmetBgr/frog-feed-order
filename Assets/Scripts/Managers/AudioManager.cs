@@ -37,26 +37,20 @@ public class AudioManager : MonoBehaviour{
 
         yield return new WaitForSecondsRealtime(delay);
 
-        /*audioSource.volume = sound.useRandomVolume ? Random.Range(sound.volumeRandom.x, sound.volumeRandom.y) : sound.volume;
-        audioSource.pitch = sound.useRandomPitch ? Random.Range(sound.pitchRandom.x, sound.pitchRandom.y) : sound.pitch;
-        audioSource.pitch = playReverse ? -sound.pitch : sound.pitch;
-        audioSource.time = sound.pitch < 0 ? sound.clips[0].length - 0.001f : 0f;
-
-        audioSource.PlayOneShot(sound.clips[0]);
-        */
         sound.Play(audioSource);
-
-        //PlaySound(sound, playReverse);
     }
 
     private AudioSource GetAudioSource() {
         for (int i = 0; i < audioSources.Count; i++) {
             if (audioSources[i].isPlaying)
                 continue;
-            else
-                return audioSources[i];
-        }
+            else {
 
+                audioSources[i].clip = null;
+                return audioSources[i];
+
+            }
+        }
         AudioSource audioSource = Instantiate(audioSourcePrefab, Vector3.zero, Quaternion.identity).GetComponent<AudioSource>();
         audioSource.transform.SetParent(this.transform);
         audioSources.Add(audioSource);
