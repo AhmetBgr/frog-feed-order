@@ -17,6 +17,9 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI movesCounterText;
     public TextMeshProUGUI levelNameText;
 
+    private string movesCounterBaseText = "{0} Moves";
+    private string levelNameBaseText = "Level {0}";
+
 
     private void OnEnable() {
         GameManager.instance.OnMovesCountChanged += UpdateMoveCounterText;
@@ -28,8 +31,6 @@ public class UIController : MonoBehaviour
         GameManager.instance.OnMovesCountChanged -= UpdateMoveCounterText;
         Game.onStateChanged -= TryOpenCorrectPanel;
         LevelManager.OnLeveload -= UpdateLevelNameText;
-
-
     }
 
     private void Start() {
@@ -38,14 +39,14 @@ public class UIController : MonoBehaviour
     }
 
     void UpdateMoveCounterText(int movesCount){
-        movesCounterText.text = movesCount.ToString();
+        movesCounterText.text = String.Format(movesCounterBaseText, movesCount);// movesCount.ToString();
 
         movesCounterText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
     }
 
     void UpdateLevelNameText(int curLevelIndex) {
         Debug.Log("cur level index in uicont: " + curLevelIndex);
-        levelNameText.text = (curLevelIndex+1).ToString();
+        levelNameText.text = String.Format(levelNameBaseText, curLevelIndex + 1); //(curLevelIndex+1).ToString();
 
         //levelNameText.text = String.Format(levelNameText.text, curLevelIndex + 1);
 
@@ -56,9 +57,15 @@ public class UIController : MonoBehaviour
 
         if(state == State.LevelComplete) {
             levelCompletePanel.gameObject.SetActive(true);
+            Vector3 initScale = levelCompletePanel.localScale;
+            levelCompletePanel.localScale = Vector3.zero;
+            levelCompletePanel.DOScale(initScale, 0.5f);
         }
         else if(state == State.GameOver) {
             gameOverPanel.gameObject.SetActive(true);
+            Vector3 initScale = gameOverPanel.localScale;
+            gameOverPanel.localScale = Vector3.zero;
+            gameOverPanel.DOScale(initScale, 1.5f);
         }
 
     }

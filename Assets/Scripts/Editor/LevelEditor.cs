@@ -1,377 +1,305 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using System.IO;
 
 public class LevelEditor : EditorWindow {
-	[SerializeField] public GridController gridController;
-	[SerializeField] public LevelManager levelManager;
+    [SerializeField] private GridManager gridManager;
+    [SerializeField] private LevelManager levelManager;
 
+    private string LevelPath => $"{Application.dataPath}/Resources/Levels/";
 
-	int selGridInt = 0;
-	int selGridInt2 = 0;
+    // UI Variables
+    private string[] actionOptions;
+    private string[] colorOptions;
+    private List<string> savedLevels => Utils.allLevels;
 
-	string[] selectStrings;
-	string[] selectStrings2;
+    private int selectedActionIndex = 0;
+    private int selectedColorIndex = 0;
+    private int savedLevelIndex = 0;
 
-	string newLevelName;
-	int movesCount;
+    private string newLevelName;
+    private int movesCount;
+    private string currentLevel;
 
-	List<string> savedLevels => Utils.allLevels;
-	int savedLevelIndex = 0;
-	Event e;
-	bool in2DMode;
-	string currentLevel;
-	static string textFilePath => Application.dataPath + "/leveleditorprefabs.txt";
-	string levelPath => Application.dataPath + "/Resources/Levels/";
+    private Vector2 scrollPosition;
 
-	public GameObject[] prefabs;
-	Vector2 scrollPos;
-	bool refreshPrefabs = true;
-	GUIStyle wrapperRef;
-	GUIStyle wrapper {
-		get {
-			if (wrapperRef == null) {
-				wrapperRef = new GUIStyle();
-				wrapperRef.padding = new RectOffset(20, 20, 20, 20);
-				float n = 0.16f;
-				wrapperRef.normal.background = Utils.MakeTex(1, 1, new Color(n, n, n, 1f));
-			}
-			return wrapperRef;
-		}
-	}
+    private GUIStyle wrapperStyle;
+    private GUIStyle WrapperStyle => wrapperStyle ??= CreateWrapperStyle();
 
-    private void Awake() {
+    private Event currentEvent;
 
-	}
+    // Entry Point
+    [MenuItem("Window/Level Editor")]
+    public static void ShowWindow() => GetWindow<LevelEditor>();
 
-    void OnEnable() {
-		SceneView.duringSceneGui += SceneGUI;
-		EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-		//Selection.selectionChanged += ApplyAction;
-
-		gridController = FindAnyObjectByType<GridController>();
-		levelManager = FindAnyObjectByType<LevelManager>();
-
-
-		List<string> selectStringsTmp = new List<string>();
-		selectStringsTmp.Add("None");
-		selectStringsTmp.Add("Erase");
-		selectStringsTmp.Add("Rotate");
-		selectStringsTmp.Add("Add Grape");
-		selectStringsTmp.Add("Add Frog");
-		selectStringsTmp.Add("Add Arrow");
-
-		selectStrings = selectStringsTmp.ToArray();
-
-
-		List<string> selectStringsTmp2 = new List<string>();
-		selectStringsTmp2.Add("Blue");
-		selectStringsTmp2.Add("Purple");
-		selectStringsTmp2.Add("Green");
-		selectStringsTmp2.Add("Red");
-		selectStringsTmp2.Add("Yellow");
-
-		selectStrings2 = selectStringsTmp2.ToArray();
-
-	}
-
-	void OnDisable() {
-		SceneView.duringSceneGui -= SceneGUI;
-		EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-
-		//Selection.selectionChanged -= ApplyAction;
-	}
-
-
-
-	void OnValidate() {
-
-		refreshPrefabs = true;
-	}
-
-
-	[MenuItem("Window/Level Editor")]
-	public static void ShowWindow() {
-		EditorWindow.GetWindow(typeof(LevelEditor));
-	}
-
-	public void SceneGUI(SceneView sceneView) {
-
-		e = Event.current;
-		var controlID = GUIUtility.GetControlID(FocusType.Passive);
-		var eventType = e.GetTypeForControl(controlID);
-		if (eventType == EventType.MouseDown) {
-			ApplyAction();
-        }
-
-		Vector3 currentPos = GetPosition(e.mousePosition);
-
-		currentPos = new Vector3(currentPos.x, currentPos.y - 0.9f, currentPos.z);
-
-		Color color = Color.white;
-
-		if(selGridInt2 == 0) {
-			color = Color.blue;
-        }
-		else if (selGridInt2 == 1) {
-			color = Color.magenta;
-
-		}
-		else if (selGridInt2 == 2) {
-			color = Color.green;
-
-		}
-		else if (selGridInt2 == 3) {
-			color = Color.red;
-
-		}
-		else if (selGridInt2 == 4) {
-			color = Color.yellow;
-
-		}
-
-		LevelGizmo.UpdateGizmo(currentPos, color);
-		LevelGizmo.Enable(true); //selGridInt != 0
-		sceneView.Repaint();
-		Repaint();
-	}
-
-
-
-	void OnGUI() {
-
-		string previousLevel = currentLevel;
-		GUILayout.BeginVertical(wrapper);
-
-		scrollPos = GUILayout.BeginScrollView(scrollPos);
-
-		DrawingWindow();
-
-		BigSpace();
-
-		EditorGUILayout.BeginHorizontal();
-		//EditorGUILayout.LabelField("level name");
-		GUILayout.Label("Moves Count: ");
-		movesCount = EditorGUILayout.IntField(movesCount);
-		EditorGUILayout.EndHorizontal();
-
-		BigSpace();
-
-
-
-		if (GUILayout.Button("Clear Grid")) {
-			gridController.PopulateNodesGrid();
-		}
-
-		BigSpace();
-		HorizontalLine();
-
-		BigSpace();
-
-		EditorGUILayout.BeginHorizontal();
-		//EditorGUILayout.LabelField("level name");
-		GUILayout.Label("LEVEL NAME: ");
-		newLevelName = EditorGUILayout.TextField(newLevelName);
-		EditorGUILayout.EndHorizontal();
-		BigSpace();
-
-		if (GUILayout.Button("Save Level")) {
-			//SaveScene();
-
-			SaveToDisk(newLevelName);
-		}
-
-		BigSpace();
-		HorizontalLine();
-
-		BigSpace();
-		EditorGUILayout.BeginHorizontal();
-		if (GUILayout.Button("Load Level", GUILayout.Width(150))) {
-
-			currentLevel = savedLevels[savedLevelIndex];
-			LoadFromDisk(currentLevel);
-			//Refresh();
-
-		}
-		savedLevelIndex = EditorGUILayout.Popup(savedLevelIndex, savedLevels.ToArray());
-		EditorGUILayout.EndHorizontal();
-
-
-		EditorGUILayout.EndScrollView();
-		GUILayout.EndVertical();
-
-	}
-
-	void SaveScene() {
-
-		EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-		EditorSceneManager.SaveOpenScenes();
-	}
-
-	void ApplyAction() {
-		//if (Selection.activeGameObject == null) return;
-
-		Node node;
-		node = gridController.GetNode(Utils.PosToCoord(GetPosition(e.mousePosition)));
-
-		if (node == null) return;
-
-		if (selGridInt == 1) {
-
-			node.DeleteTopCell();
-		}
-		else if (selGridInt == 2) {
-			EntityModal entity = node.topCell?.entity;
-
-			if (!entity || entity.type == EntityType.Grape ) return;
-
-			Vector3 angles = node.topCell.transform.rotation.eulerAngles;
-
-			node.topCell.transform.eulerAngles = new Vector3(angles.x, (angles.y + 90)%360, angles.z);
-		}
-		else if (selGridInt == 3) {
-			node.AddCell(EntityType.Grape, GetEntityColor(selGridInt2));
-
-		}
-		else if (selGridInt == 4) {
-			node.AddCell(EntityType.Frog, GetEntityColor(selGridInt2));
-		}
-		else if (selGridInt == 5) {
-			node.AddCell(EntityType.Arrow, GetEntityColor(selGridInt2));
-		}
-	}
-
-	void DrawingWindow() {
-
-		HorizontalLine();
-	
-		EditorGUILayout.Space();
-
-		GUILayout.Label("Select Action: ", EditorStyles.boldLabel);
-
-		selGridInt = GUILayout.SelectionGrid(selGridInt, selectStrings, selectStrings.Length/2, GUILayout.Height(120));
-
-
-		BigSpace();
-
-        if (refreshPrefabs) {
-
-			refreshPrefabs = false;
-
-		}
-
-		GUILayout.Label("Choose Color:", EditorStyles.boldLabel);
-
-		selGridInt2 = GUILayout.SelectionGrid(selGridInt2, selectStrings2, selectStrings2.Length, GUILayout.Height(30));
-
-	}
-
-	Vector3 GetPosition(Vector3 mousePos) {
-		Ray ray = HandleUtility.GUIPointToWorldRay(mousePos);
-
-		RaycastHit hit = new RaycastHit();
-		if (Physics.Raycast(ray, out hit, 100.0f)) {
-			//Vector3 pos = hit.point + (hit.normal * 1f);
-			Vector3 pos = hit.transform.position + (hit.normal.normalized);
-
-			/*if (selGridInt == 1) {
-				pos = hit.transform.position;
-			}*/
-			return Utils.Vec3ToInt(pos);
-		}
-
-		//return Vector3.zero;
-
-
-		Plane hPlane = new Plane(Vector3.forward, Vector3.zero);
-		float distance = 0;
-		if (hPlane.Raycast(ray, out distance)) {
-			return Utils.Vec3ToInt(ray.GetPoint(distance));
-		}
-	
-		return Vector3.zero;
-	}
-
-	void SaveToDisk(string levelName) {
-
-		if (!System.IO.Directory.Exists(levelPath)) {
-			System.IO.Directory.CreateDirectory(levelPath);
-		}
-
-		string path = levelPath + levelName + ".json";
-		StreamWriter writer = new StreamWriter(path, false);
-		writer.WriteLine(JsonUtility.ToJson(new SerializedLevel(gridController.gameObject, movesCount)));
-		writer.Close();
-		AssetDatabase.ImportAsset(path);
-		//RefreshSavedLevels();
-		AssetDatabase.Refresh();
-
-		//isDirty = false;
-	}
-
-	void LoadFromDisk(string levelName) {
-
-		if (string.IsNullOrWhiteSpace(levelName)) {
-			return;
-		}
-
-		levelManager.LoadLevel(gridController.transform, LevelLoader.LoadLevelTextFile(levelName));
-
-		movesCount = levelManager.curSerializedLevel.movesCount;
-	}
-
-	EntityColor GetEntityColor(int index) {
-		EntityColor entityColor = EntityColor.Blue;
-        switch (index) {
-			case 0:
-				entityColor = EntityColor.Blue;
-				break;
-			case 1:
-				entityColor = EntityColor.Purple;
-
-				break;
-			case 2:
-				entityColor = EntityColor.Green;
-
-				break;
-			case 3:
-				entityColor = EntityColor.Red;
-
-				break;
-			case 4:
-				entityColor = EntityColor.Yellow;
-
-				break;
-
-		}
-		return entityColor;
+    private void OnEnable() {
+        SceneView.duringSceneGui += OnSceneGUI;
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        InitializeReferences();
+        InitializeUIOptions();
     }
 
-	void HorizontalLine() => EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+    private void OnDisable() {
+        SceneView.duringSceneGui -= OnSceneGUI;
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+    }
 
-	void BigSpace() {
-		EditorGUILayout.Space();
-		EditorGUILayout.Space();
-		EditorGUILayout.Space();
-	}
+    private void InitializeReferences() {
+        gridManager = FindObjectOfType<GridManager>();
+        levelManager = FindObjectOfType<LevelManager>();
+    }
 
-	void RefreshReferences() {
-		if (gridController == null) {
-			gridController = FindAnyObjectByType<GridController>();
-		}
-		if (levelManager == null) {
-			levelManager = FindAnyObjectByType<LevelManager>();
-		}
-	}
-	void OnPlayModeStateChanged(PlayModeStateChange state) {
-		if (state == PlayModeStateChange.EnteredEditMode) {
-			RefreshReferences();
-		}
-	}
+    private void InitializeUIOptions() {
+        actionOptions = new[]
+        {
+            "None", "Erase", "Rotate", "Add Grape", "Add Frog", "Add Arrow"
+        };
+
+        colorOptions = new[]
+        {
+            "Blue", "Purple", "Green", "Red", "Yellow"
+        };
+    }
+
+    private void OnGUI() {
+        GUILayout.BeginVertical(WrapperStyle);
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+
+        DrawActionSelection();
+        BigSpace();
+        BigSpace();
+
+        DrawHorizontalLine();
+        DrawMovesCount();
+        BigSpace();
+        BigSpace();
+        
+        DrawHorizontalLine();
+        DrawGridActions();
+        BigSpace();
+        BigSpace();
+        
+        DrawHorizontalLine();
+        DrawLevelSaveLoad();
+
+        GUILayout.EndScrollView();
+        GUILayout.EndVertical();
+    }
+
+    private void OnSceneGUI(SceneView sceneView) {
+        currentEvent = Event.current;
+
+        HandleSceneMouseInput();
+
+        Vector3 currentPosition = GetGridPosition(currentEvent.mousePosition);
+        UpdateGizmo(currentPosition);
+
+        sceneView.Repaint();
+    }
+
+    private void HandleSceneMouseInput() {
+        if (currentEvent.type == EventType.MouseDown) {
+            ApplyAction();
+        }
+    }
+
+    private void DrawActionSelection() {
+        DrawHorizontalLine();
+        EditorGUILayout.LabelField("Select Action:", EditorStyles.boldLabel);
+        selectedActionIndex = GUILayout.SelectionGrid(selectedActionIndex, actionOptions, actionOptions.Length / 2, GUILayout.Height(120));
+
+        EditorGUILayout.LabelField("Choose Color:", EditorStyles.boldLabel);
+        selectedColorIndex = GUILayout.SelectionGrid(selectedColorIndex, colorOptions, colorOptions.Length, GUILayout.Height(30));
+    }
+
+    private void DrawMovesCount() {
+        EditorGUILayout.BeginHorizontal();
+
+        EditorGUILayout.LabelField("Moves Count:");
+        movesCount = EditorGUILayout.IntField(movesCount);
+
+        EditorGUILayout.EndHorizontal();
+
+    }
+
+    private void DrawGridActions() {
+        if (GUILayout.Button("Clear Grid")) {
+            // This generetas 5x5 grid from scratch 
+            // and populates nodesGrid matrix 
+            gridManager.PopulateNodesGrid();
+        }
+    }
+
+    private void DrawLevelSaveLoad() {
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.Label("LEVEL NAME:");
+        newLevelName = EditorGUILayout.TextField(newLevelName);
+
+        if (GUILayout.Button("Save Level")) {
+            SaveLevel(newLevelName);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        BigSpace();
+
+        GUILayout.Label("Load Saved Levels:");
+
+        EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Load Level", GUILayout.Width(150))) {
+            currentLevel = savedLevels[savedLevelIndex];
+            LoadLevel(currentLevel);
+        }
+        savedLevelIndex = EditorGUILayout.Popup(savedLevelIndex, savedLevels.ToArray());
+
+        EditorGUILayout.EndHorizontal();
+
+    }
+
+    private void ApplyAction() {
+        // Find node in mouse position
+        Node targetNode = gridManager.GetNode(Utils.PosToCoord(GetGridPosition(currentEvent.mousePosition)));
+
+        if (targetNode == null) {
+            return;
+        }
+
+        switch (selectedActionIndex) {
+            case 1:
+            targetNode.DeleteTopCell();
+            break;
+            case 2:
+            RotateEntity(targetNode);
+            break;
+            default:
+            AddEntityToNode(targetNode);
+            break;
+        }
+    }
+
+    private void RotateEntity(Node node) {
+        EntityModal entity = node.topCell?.entity;
+
+       
+        if (entity == null || entity.type == EntityType.Grape) {
+            return;
+        }
+
+        Vector3 rotation = node.topCell.transform.rotation.eulerAngles;
+        node.topCell.transform.eulerAngles = new Vector3(rotation.x, (rotation.y + 90) % 360, rotation.z);
+    }
+
+    private void AddEntityToNode(Node node) {
+        EntityType entityType = GetSelectedEntityType();
+        EntityColor color = GetSelectedEntityColor();
+
+        if (entityType != EntityType.None) {
+            node.AddCell(entityType, color);
+        }
+    }
+
+    private EntityType GetSelectedEntityType() {
+        return selectedActionIndex switch {
+            3 => EntityType.Grape,
+            4 => EntityType.Frog,
+            5 => EntityType.Arrow,
+            _ => EntityType.None
+        };
+    }
+
+    private EntityColor GetSelectedEntityColor() {
+        return selectedColorIndex switch {
+            0 => EntityColor.Blue,
+            1 => EntityColor.Purple,
+            2 => EntityColor.Green,
+            3 => EntityColor.Red,
+            4 => EntityColor.Yellow,
+            _ => EntityColor.Blue
+        };
+    }
+
+    private void SaveLevel(string levelName) {
+        if (string.IsNullOrWhiteSpace(levelName)) {
+            Debug.LogWarning("Level name cannot be empty.");
+            return;
+        }
+
+        string path = $"{LevelPath}{levelName}.json";
+
+        if (!Directory.Exists(LevelPath)) {
+            Directory.CreateDirectory(LevelPath);
+        }
+
+        File.WriteAllText(path, JsonUtility.ToJson(new SerializedLevel(gridManager.gameObject, movesCount)));
+        AssetDatabase.Refresh();
+    }
+
+    private void LoadLevel(string levelName) {
+        if (string.IsNullOrWhiteSpace(levelName)) {
+            Debug.LogWarning("Invalid level name.");
+            return;
+        }
+
+        levelManager.LoadLevel(gridManager.transform, LevelManager.LoadLevelTextFile(levelName));
+        movesCount = levelManager.curSerializedLevel.movesCount;
+
+    }
+    private Vector3 GetGridPosition(Vector3 mousePosition) {
+        Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f)) {
+            return Utils.Vec3ToInt(hit.transform.position); // + hit.normal.normalized
+        }
+
+        return Vector3.one * 999; // Return an out of grid position
+    }
+
+    private void UpdateGizmo(Vector3 position) {
+        Vector2Int coord = Utils.PosToCoord(position);
+        bool isOutOfGrid = gridManager.IsOutOfGrid(coord);
+        
+        LevelGizmo.Enable(!isOutOfGrid); // Disable if out of grid
+
+        if (isOutOfGrid) return;
+
+        Color color = GetSelectedColor();
+        LevelGizmo.UpdateGizmo(position, color);
+    }
+
+    private Color GetSelectedColor() {
+        return selectedColorIndex switch {
+            0 => Color.blue,
+            1 => Color.magenta,
+            2 => Color.green,
+            3 => Color.red,
+            4 => Color.yellow,
+            _ => Color.white
+        };
+    }
+
+    private void OnPlayModeStateChanged(PlayModeStateChange state) {
+        if (state == PlayModeStateChange.EnteredEditMode) {
+            InitializeReferences();
+        }
+    }
+
+    private GUIStyle CreateWrapperStyle() {
+        return new GUIStyle {
+            padding = new RectOffset(20, 20, 20, 20),
+            normal = { background = Utils.MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f)) }
+        };
+    }
+
+    private void DrawHorizontalLine() => EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+    void BigSpace() {
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+    }
 }

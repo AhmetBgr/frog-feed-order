@@ -5,7 +5,7 @@ using System.Linq;
 
 using UnityEngine;
 
-public class GridController : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
     public Cell[] cellPrefabPools;
 
@@ -16,14 +16,23 @@ public class GridController : MonoBehaviour
 
     public GameObject nodePrefab;
 
-    // Start is called before the first frame update
+    public static GridManager instance { get; private set; }
+
+    private void Awake() {
+        if (instance != null && instance != this) {
+            Destroy(gameObject); // Destroy duplicate
+            return;
+        }
+
+        instance = this;
+        //DontDestroyOnLoad(gameObject); // Make the instance persistent
+    }
+
     void Start()
     {
         UpdateNodesGrid();
 
     }
-
-
 
     public void PopulateNodesGrid() {
         List<GameObject> objs = new List<GameObject>();
@@ -98,6 +107,14 @@ public class GridController : MonoBehaviour
         Vector2Int nextCoord = new Vector2Int(fromCoord.x + dir.x, fromCoord.y - dir.y);
 
         return nextCoord;
+    }
+
+    public bool IsOutOfGrid(Vector2Int coord) {
+        if (coord.x >= 5 | coord.y >= 5) return true;
+
+        if (coord.x < 0 | coord.y < 0) return true;
+
+        return false;
     }
 
     /*public Node GetNextNode(Vector2Int fromCoord, Vector2Int dir) {

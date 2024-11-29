@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 4718478766563244183, guid: e73809f483df1024fa62c3f15028a5e8,
         type: 3}
       propertyPath: m_Name
-      value: Red Cell Variant Variant
+      value: Red Grape Cell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5835236441745804384, guid: e73809f483df1024fa62c3f15028a5e8,
         type: 3}
@@ -88,6 +88,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1188077980830278355}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4649414662141931187 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5835236441745804384, guid: e73809f483df1024fa62c3f15028a5e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1188077980830278355}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6238956205140861148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -96,6 +108,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1890942499571149201}
     m_Modifications:
+    - target: {fileID: 336524715853710019, guid: 85f95eb9794913745a9a8b0f09a67293,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 4649414662141931187}
     - target: {fileID: 735473630987701140, guid: 85f95eb9794913745a9a8b0f09a67293,
         type: 3}
       propertyPath: m_LocalRotation.w

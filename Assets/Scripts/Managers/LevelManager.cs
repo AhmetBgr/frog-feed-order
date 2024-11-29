@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 
 
 public class LevelManager : MonoBehaviour{
-    public GridController gridManager;
+    public GridManager gridManager;
     public GameManager gameManager;
 
     public SerializedLevel curSerializedLevel;
@@ -94,12 +94,12 @@ public class LevelManager : MonoBehaviour{
 
         gridManager.PopulateNodesGrid();
         //Debug.Log("level name trying to load: " + levelName);
-        SerializedLevel serializedLevel = LevelLoader.LoadLevel(textFile);
+        SerializedLevel serializedLevel = SerializeLevel(textFile);
 
         for (int i = 0; i < levelParent.childCount; i++) {
 
             Node node = levelParent.GetChild(i).GetComponent<Node>();
-            LevelLoader.InstantiateCells(serializedLevel.nodeObjects[i], gridManager.cellPrefabs, node.transform);
+            InstantiateCells(serializedLevel.nodeObjects[i], gridManager.cellPrefabs, node.transform);
 
             node.UpdateTopCell();
         }
@@ -109,5 +109,84 @@ public class LevelManager : MonoBehaviour{
         curSerializedLevel = serializedLevel;
 
         OnLeveload?.Invoke(currentLevelIndex);
+    }
+
+
+    static int levelIndex = 0;
+    static List<string> allLevels => Utils.allLevels;
+
+
+
+    public static SerializedLevel SerializeLevel(TextAsset textFile) {
+        //SetLevelIndexByName(levelName);
+        //TextAsset textFile = Resources.Load<TextAsset>("Levels/" + levelName);
+        return JsonUtility.FromJson<SerializedLevel>(textFile.text);
+    }
+
+    public static TextAsset LoadLevelTextFile(string levelName) {
+        SetLevelIndexByName(levelName);
+        TextAsset textFile = Resources.Load<TextAsset>("Levels/" + levelName);
+        return textFile;
+    }
+
+    public static void InstantiateCells(SerializedNodeObject serializedNodeObject, GameObject[] prefabs, Transform node) {
+        ObjectPooler objectPooler = FindObjectOfType<ObjectPooler>();
+
+        foreach (var serializedCellObject in serializedNodeObject.cellObjects) {
+
+            /*GameObject go = null;
+            if (Application.isPlaying) {
+                go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""), serializedCellObject.pos, serializedCellObject.angles);
+                if (go == null)
+                    Debug.LogError("objectPooler returned null");
+            }
+            //else
+                //go = GameObject.Instantiate(prefab) as GameObject;
+
+            //go = GameObject.Instantiate(prefab) as GameObject;
+
+            go.transform.parent = node;
+            go.transform.localPosition = serializedCellObject.pos;
+            go.transform.localEulerAngles = serializedCellObject.angles;
+
+            // Call the interface method if applicable
+            IPoolableObject poolable = go.GetComponent<IPoolableObject>();
+            if (poolable != null) {
+                poolable.OnObjectSpawn();
+            }*/
+
+
+            foreach (GameObject prefab in prefabs) {
+                if (prefab.transform.name == serializedCellObject.prefab) {
+                    var go = GameObject.Instantiate(prefab) as GameObject;
+
+                    go.transform.parent = node;
+                    go.transform.localPosition = serializedCellObject.pos;
+                    go.transform.localEulerAngles = serializedCellObject.angles;
+
+                }
+            }
+        }
+    }
+
+    /*public static SerializedLevel LoadNextLevel() {
+        levelIndex++;
+        if (levelIndex >= allLevels.Count) {
+            levelIndex = 0;
+        }
+        if (allLevels[levelIndex].Contains("test")) {
+            return LoadNextLevel();
+        }
+        else {
+            return LoadLevel(allLevels[levelIndex]);
+        }
+    }*/
+
+    static void SetLevelIndexByName(string levelName) {
+        for (int i = 0; i < allLevels.Count; i++) {
+            if (allLevels[i] == levelName) {
+                levelIndex = i;
+            }
+        }
     }
 }

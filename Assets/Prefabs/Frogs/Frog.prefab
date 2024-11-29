@@ -257,7 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 9036005969333822343}
   coord: {x: 0, y: 0}
-  type: 0
+  type: 1
   color: 0
   view: {fileID: 9212175779826650880}
   dir: {x: 0, y: 0}
@@ -275,8 +275,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modal: {fileID: 7530044279479584224}
+  punchScaleSFX: {fileID: 0}
   lr: {fileID: 8026477943891562601}
   interactSFX: {fileID: 11400000, guid: 9af6991188c27de4e937573af602824b, type: 2}
+  grapeDenySFX: {fileID: 11400000, guid: 6c3ac27e297bea84e88cb9c82579d5c5, type: 2}
 --- !u!114 &853598008421522868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,5 +291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd98ec3880b8fe4e8649ffc412e06ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cell: {fileID: 0}
   modal: {fileID: 7530044279479584224}
   view: {fileID: 9212175779826650880}

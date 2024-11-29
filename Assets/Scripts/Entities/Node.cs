@@ -10,14 +10,14 @@ public class Node : MonoBehaviour
     public List<Cell> cells = new List<Cell>();
     public Cell topCell;
 
-    private static GridController gridController;
+    private static GridManager gridManager;
 
 
     private void OnEnable() {
 
         //LevelManager.OnLeveload += UpdateTopCell;
 
-        Invoke("UpdateTopCell", 0.1f);
+        //Invoke("UpdateTopCell", 0.1f);
         Invoke("SubscribeOnExpire", 0.1f);
 
         //UpdateTopCell();
@@ -33,16 +33,12 @@ public class Node : MonoBehaviour
     }
 
 
-    void Start()
-    {
-
-        if(gridController == null && transform.parent != null)
-            transform.parent.TryGetComponent(out gridController);
-
-
-
+    void Start(){
+        gridManager = GridManager.instance;
     }
-
+    public void UpdateTopCell(int curlevelIndex = 0) {
+        Invoke("UpdateTopCell", 0.08f);
+    }
     public void UpdateTopCell() {
         cells.Clear();
         for (int i = 0; i < transform.childCount; i++) {
@@ -63,7 +59,7 @@ public class Node : MonoBehaviour
     private void SubscribeOnExpire() {
         if (topCell.entity == null) {
 
-            Debug.LogWarning("tried to subscribe base cell entity");
+            //Debug.LogWarning("tried to subscribe base cell entity");
             return; // dont remove the base cell
 
         }
@@ -131,12 +127,12 @@ public class Node : MonoBehaviour
         UpdateTopCell();
 
 
-        if (gridController == null && transform.parent != null)
-            transform.parent.TryGetComponent(out gridController);
+        if (gridManager == null && transform.parent != null)
+            transform.parent.TryGetComponent(out gridManager);
 
-        if (gridController == null) return;
+        if (gridManager == null) return;
 
-        GameObject prefab = gridController.GetCellPrefab(type, color);
+        GameObject prefab = gridManager.GetCellPrefab(type, color);
 
         GameObject cell = Instantiate(prefab, position: transform.GetChild(transform.childCount-1).position + (Vector3.up * 0.1f), Quaternion.identity);
         cell.transform.SetParent(transform);
@@ -148,12 +144,6 @@ public class Node : MonoBehaviour
 
 
         cells.Add(topCell);
-        /*cells.Add(cell.GetComponent<Cell>());
-
-        if(cells.Count > 1) {
-            cells[cells.Count - 2].entity.gameObject.SetActive(false);
-        }*/
-
 
         if (!Application.isPlaying) {
             EditorUtility.SetDirty(topCell.gameObject);

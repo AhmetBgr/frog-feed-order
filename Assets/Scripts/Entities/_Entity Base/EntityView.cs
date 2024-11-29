@@ -19,9 +19,7 @@ public class EntityView : MonoBehaviour
 
     protected virtual void OnDisable() {
         FrogController.OnTongueMove -= HandleAnimateEntity;
-
     }
-
 
     // Handle the event when it's triggered
     private void HandleAnimateEntity(List<Vector2Int> tonguePathCoord, EntityColor targetColor) {
@@ -44,7 +42,7 @@ public class EntityView : MonoBehaviour
         if (sound)
             AudioManager.instance.PlaySound(sound, delay);
 
-        transform.DOPunchPosition(dir, duration, vibrato: 1).SetDelay(delay);
+        transform.DOPunchPosition(dir, duration, vibrato: 10, elasticity: 10).SetDelay(delay);
     }
 
     public virtual void AnimateScale(Vector3 endValue, float duration, float delay = 0f, Action onComplete = null, SoundEffect sound = null) {

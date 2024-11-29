@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Frog Purple Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6538314360008541435, guid: cd94549728efa664085ac54ea6d66433,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 4128743621239261946}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -168,6 +173,18 @@ PrefabInstance:
       addedObject: {fileID: 2902055942877004326}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f23b63548ec0eb54b9167b7c2a6d1196, type: 3}
+--- !u!114 &4128743621239261946 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5916854790839177459, guid: f23b63548ec0eb54b9167b7c2a6d1196,
+    type: 3}
+  m_PrefabInstance: {fileID: 7732920698446404105}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7203453032115637720 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 623489314707167185, guid: f23b63548ec0eb54b9167b7c2a6d1196,

@@ -22,7 +22,10 @@ public class AudioManager : MonoBehaviour{
 
         AudioSource audioSource = GetAudioSource();
 
-        if (sound == null | audioSource == null) return;
+        if (sound == null | audioSource == null) {
+            Debug.LogWarning("sound did not played");
+            return;
+        } 
 
         StartCoroutine(PlaySoundWithDelay(sound, delay, audioSource, playReverse)); 
         //audioSource.PlayOneShot(sound);
@@ -32,8 +35,15 @@ public class AudioManager : MonoBehaviour{
     private IEnumerator PlaySoundWithDelay(SoundEffect sound,
         float delay, AudioSource audioSource, bool playReverse = false) {
 
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSecondsRealtime(delay);
 
+        /*audioSource.volume = sound.useRandomVolume ? Random.Range(sound.volumeRandom.x, sound.volumeRandom.y) : sound.volume;
+        audioSource.pitch = sound.useRandomPitch ? Random.Range(sound.pitchRandom.x, sound.pitchRandom.y) : sound.pitch;
+        audioSource.pitch = playReverse ? -sound.pitch : sound.pitch;
+        audioSource.time = sound.pitch < 0 ? sound.clips[0].length - 0.001f : 0f;
+
+        audioSource.PlayOneShot(sound.clips[0]);
+        */
         sound.Play(audioSource);
 
         //PlaySound(sound, playReverse);
@@ -50,7 +60,7 @@ public class AudioManager : MonoBehaviour{
         AudioSource audioSource = Instantiate(audioSourcePrefab, Vector3.zero, Quaternion.identity).GetComponent<AudioSource>();
         audioSource.transform.SetParent(this.transform);
         audioSources.Add(audioSource);
-        return null;
+        return audioSource;
     }
 
 }

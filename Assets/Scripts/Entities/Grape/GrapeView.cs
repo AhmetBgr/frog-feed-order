@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class GrapeView : EntityView
 {
     public SoundEffect eatenSFX;
 
+
     protected override void OnEnable() {
         base.OnEnable();
     }
@@ -15,18 +17,18 @@ public class GrapeView : EntityView
         base.OnDisable();
     }
 
-    public void PlayRetractAnim(List<Vector3> path, float dur, float delay = 0f) {
+    public void PlayRetractAnim(List<Vector3> path, float dur, float delay = 0f, Action onCompleteCallBack = null) {
         if (path.Count == 0) return;
 
         path.Reverse();
 
         //transform.DOScale(0f, 0.2f).SetDelay(delay);
         //transform.DOPath(path.ToArray(), dur).SetDelay(delay).SetEase(Ease.Linear);
-        StartCoroutine(RetractAnim(path, dur, delay));
+        StartCoroutine(RetractAnim(path, dur, delay, onCompleteCallBack));
     }
 
 
-    private IEnumerator RetractAnim(List<Vector3> path, float segmentDuration, float delay = 0f) {
+    private IEnumerator RetractAnim(List<Vector3> path, float segmentDuration, float delay = 0f, Action onCompleteCallBack = null) {
         yield return new WaitForSecondsRealtime(delay);
         path.Reverse();
         path.Add(transform.position);
@@ -43,7 +45,7 @@ public class GrapeView : EntityView
 
         for (int i = pointsCount - 1; i > 0; i--) {
             if(i == 1) {
-                AnimateScale(Vector3.zero, Game.tongueMoveDur, Game.tongueMoveDur/3, () => gameObject.SetActive(false), eatenSFX);
+                AnimateScale(Vector3.zero, Game.tongueMoveDur, Game.tongueMoveDur/3, () => gameObject.SetActive(true), eatenSFX);
             }
 
             float startTime = Time.time;
@@ -70,11 +72,13 @@ public class GrapeView : EntityView
             }
             //startPosition = endPosition;
         }
+
+
         //AnimateScale(Vector3.zero, Game.tongueMoveDur, 0f, () => gameObject.SetActive(false), eatenSFX);
 
-        /*if (onCompleteCallBack != null)
+        if (onCompleteCallBack != null)
             onCompleteCallBack();
-
+        /*
         lr.gameObject.SetActive(false);*/
     }
 }

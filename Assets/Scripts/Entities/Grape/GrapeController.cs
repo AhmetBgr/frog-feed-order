@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrapeController : MonoBehaviour
+public class GrapeController : EntityController
 {
     public GrapeModal modal;
     public GrapeView view;
@@ -14,11 +14,20 @@ public class GrapeController : MonoBehaviour
 
     protected void OnEnable() {
         FrogController.OnSuccessfullEat += HandleRecractAnim;
+        //modal.OnExpire += SetParent;
+
     }
 
     protected void OnDisable() {
         FrogController.OnSuccessfullEat -= HandleRecractAnim;
+        //modal.OnExpire -= SetParent;
+
     }
+
+    /*public void SetParent() {
+        transform.SetParent(cell.transform);
+
+    }*/
 
     private void HandleRecractAnim(List<Vector2Int> tonguePathCoord, List<Vector3> tonguePath) {
         if (tonguePathCoord.Contains(modal.coord)) {
@@ -27,12 +36,12 @@ public class GrapeController : MonoBehaviour
             path.AddRange(tonguePath.GetRange(0, index )); ///index
 
             float retractDelay = CalculateRecractDelay(tonguePath.Count, index);
-            view.PlayRetractAnim(path, Game.tongueMoveDur, retractDelay); /// Game.tongueMoveDur * path.Count
+            view.PlayRetractAnim(path, Game.tongueMoveDur, retractDelay, () => transform.SetParent(cell.transform)); /// Game.tongueMoveDur * path.Count
 
             //float scaleDelay = (tonguePath.Count - 1) * Game.tongueMoveDur * 1.8f + (index * 0.2f * Game.tongueMoveDur);
             //view.AnimateScale(Vector3.zero, Game.tongueMoveDur, scaleDelay, () => gameObject.SetActive(false), view.eatenSFX); //(tonguePath.Count - index + tonguePath.Count) * Game.tongueMoveDur
 
-            StartCoroutine(modal.TriggerOnExpire(retractDelay + Game.tongueMoveDur/2));
+            StartCoroutine(modal.TriggerOnExpire(retractDelay + (Game.tongueMoveDur * (tonguePath.Count - index - 1))));
         }
     }
 

@@ -12,12 +12,7 @@ public class SoundEditor : Editor {
 
         SoundEffect sound = (SoundEffect)target;
 
-        sound.useRandomVolume = GUILayout.Toggle(sound.useRandomVolume, "Use Random Volume");
-
-        if (sound.useRandomVolume)
-            sound.volumeRandom = EditorGUILayout.Vector2Field("Random Volume", sound.volumeRandom);
-        else
-            sound.volume = EditorGUILayout.Slider(sound.volume, leftValue: 0, rightValue: 1);
+        sound.volume = EditorGUILayout.Slider(sound.volume, leftValue: 0, rightValue: 1);
 
         sound.useRandomPitch = GUILayout.Toggle(sound.useRandomPitch, "Use Random Pitch");
 
@@ -30,13 +25,11 @@ public class SoundEditor : Editor {
             sound.PlayPreview();
         }
 
-        if (GUILayout.Button("Play Reverse")) {
-            sound.PlayPreview(true);
-        }
-
         if (sound.source && sound.source.isPlaying && GUILayout.Button("Stop")) {
             sound.StopPreview();
         }
+
+        EditorUtility.SetDirty(sound);
 
     }
 }

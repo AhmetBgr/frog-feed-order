@@ -4,42 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class FrogController : MonoBehaviour
-{
+public class FrogController : EntityController{
     public FrogModal modal;
-
     public FrogView view;
 
-    private GridController gridController;
-    List<EntityModal> visitedEntities = new List<EntityModal>();
+    private GridManager gridManager;
+    private List<EntityModal> visitedEntities = new List<EntityModal>();
     private bool isBusy = false;
 
-
-    //public delegate void OnTongueMoveDelegate(List<Vector2Int> tonguePathCoord);
+    // Events
     public static event Action OnInteracted;
     public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
 
-
-
-    private void Awake() {
-        //GameManager.instance.AddToFrogsPool(modal);
-
-    }
-
-    private void OnDisable() {
-        // this is to make sure to initially inactive frogs to be added
-        // already added frogs are skipped 
-        //GameManager.instance.AddToFrogsPool(modal);
-
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //base.Start();
+    void Start(){
         modal.view = view;
-        gridController = FindAnyObjectByType<GridController>();
+        gridManager = GridManager.instance;
+
     }
 
     private void OnMouseDown() {
@@ -47,7 +28,7 @@ public class FrogController : MonoBehaviour
 
         isBusy = true;
 
-        // play interaction sound effect
+        //Play interaction sound effect
         AudioManager.instance.PlaySound(view.interactSFX);
 
         // Get path for the tongue
@@ -55,7 +36,7 @@ public class FrogController : MonoBehaviour
 
         OnInteracted?.Invoke();
 
-        // Play anim        
+        // Play tongue move animation       
         view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, () => { isBusy = false; });
 
     }
@@ -72,16 +53,14 @@ public class FrogController : MonoBehaviour
 
         Vector2Int tongueDir = modal.dir;
 
-        EntityModal nextEntity = gridController.GetEntity(gridController.GetNextCoord(modal.coord, tongueDir));
+        EntityModal nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(modal.coord, tongueDir));
 
         if (nextEntity == null) {
-            Debug.LogWarning($"Next cell has no entity: {gridController.GetNextCoord(modal.coord, tongueDir)}");
+            Debug.LogWarning($"Next cell has no entity: {gridManager.GetNextCoord(modal.coord, tongueDir)}");
             return tonguePath;
         }
 
         float delay = 0f;
-
-
 
         while (nextEntity && !visitedEntities.Contains(nextEntity)) {
             //nextEntity.isVisited = true;
@@ -94,7 +73,7 @@ public class FrogController : MonoBehaviour
             // Trigger animation 
             //nextEntity.view.AnimatePunchScale(Vector3.one * 0.5f, 0.2f, delay);
             if (!IsValidEntity(nextEntity)) {
-                nextEntity.view.AnimatePunchPos(new Vector3(tongueDir.x, 0f, tongueDir.y)*0.3f, Game.tongueMoveDur, Game.tongueMoveDur * (tonguePath.Count-1));
+                nextEntity.view.AnimatePunchPos(new Vector3(tongueDir.x, 0f, tongueDir.y)*0.3f, Game.tongueMoveDur, Game.tongueMoveDur * (tonguePath.Count-1), view.grapeDenySFX);
                 break;
             }
 
@@ -105,14 +84,7 @@ public class FrogController : MonoBehaviour
 
             // Update delay and get the next entity
             delay += Game.tongueMoveDur;
-            nextEntity = gridController.GetEntity(gridController.GetNextCoord(nextEntity.coord, tongueDir));
-
-            /*if (nextEntity == null) {
-                Debug.Log("Next cell has no entity.");
-                break;
-            }*/
-
-            
+            nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(nextEntity.coord, tongueDir));
         }
 
         // Check if eating is succesfull
@@ -133,14 +105,7 @@ public class FrogController : MonoBehaviour
     }
 
     private bool IsValidEntity(EntityModal entity) {
-        // Check if the entity matches the desired type and color
-        //if (visitedEntities.Contains(entity)) return false;
-
-        //else return true;
-
         return (entity.type == EntityType.Grape || entity.type == EntityType.Arrow) && entity.color == modal.color;
-
-        //return (entity.type == EntityType.Grape || entity.type == EntityType.Arrow) && entity.color == modal.color;
 
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrowController : MonoBehaviour
+public class ArrowController : EntityController
 {
     public ArrowModal modal;
     public EntityView view;

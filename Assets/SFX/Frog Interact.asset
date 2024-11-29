@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Frog Interact
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: 474d64a6055452c4490401b1549dcf41, type: 3}
+  - {fileID: 8300000, guid: 2e6fe6ff1481ce04cbc4d52fdbf8a9ed, type: 3}
   useRandomVolume: 0
   volume: 1
   volumeRandom: {x: 0.5, y: 0.5}
-  useRandomPitch: 1
-  pitch: 0
+  useRandomPitch: 0
+  pitch: 1
   pitchRandom: {x: 0.4, y: 0.7}
   playOrder: 0
   playIndex: 0

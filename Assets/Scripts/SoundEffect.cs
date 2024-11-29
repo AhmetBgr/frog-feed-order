@@ -77,6 +77,8 @@ public class SoundEffect : ScriptableObject {
 
         source = audioSourceParam;
         if (source == null) {
+            Debug.LogWarning("sound source was null");
+
             var _obj = new GameObject("Sound", typeof(AudioSource));
             source = _obj.GetComponent<AudioSource>();
         }
@@ -90,6 +92,7 @@ public class SoundEffect : ScriptableObject {
         source.time = source.pitch < 0 ? source.clip.length - 0.001f : 0f;
 
         source.Play();
+        //source.PlayOneShot(source.clip);
 
         /*#if UNITY_EDITOR
                 if (source != previewer) {

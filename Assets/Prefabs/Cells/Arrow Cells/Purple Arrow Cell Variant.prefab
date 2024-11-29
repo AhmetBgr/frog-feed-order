@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 4872173266067547140, guid: f23b63548ec0eb54b9167b7c2a6d1196,
         type: 3}
       propertyPath: m_Name
-      value: Purple Cell Variant Variant
+      value: Purple Arrow Cell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5916854790839177459, guid: f23b63548ec0eb54b9167b7c2a6d1196,
         type: 3}
@@ -82,6 +82,18 @@ PrefabInstance:
       addedObject: {fileID: 5314632969685632179}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f23b63548ec0eb54b9167b7c2a6d1196, type: 3}
+--- !u!114 &84619149141671361 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5916854790839177459, guid: f23b63548ec0eb54b9167b7c2a6d1196,
+    type: 3}
+  m_PrefabInstance: {fileID: 5994366694083095858}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6599832314755037923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 623489314707167185, guid: f23b63548ec0eb54b9167b7c2a6d1196,
@@ -136,6 +148,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arrow Purple Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4842544756586340956, guid: 30dfa05fd11e79141bec697474e3a1f5,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 84619149141671361}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

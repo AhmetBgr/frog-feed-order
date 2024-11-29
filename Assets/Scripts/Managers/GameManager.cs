@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         foreach (var item in frogsArray) {
             frogs.Add(item);
         }
-
+        
 
         movesCount = LevelManager.instance.curSerializedLevel.movesCount;
     }
@@ -122,13 +122,6 @@ public class GameManager : MonoBehaviour
 
         frogs.Add(frog);
 
-        #if UNITY_EDITOR
-        
-        EditorUtility.SetDirty(this);
-        EditorSceneManager.MarkSceneDirty(gameObject.scene);
-        EditorSceneManager.SaveOpenScenes();
-        
-        #endif
     }
     public void RemoveFromFrogsPool(FrogModal frog) {
         if (!frogs.Contains(frog)) return;
@@ -136,12 +129,5 @@ public class GameManager : MonoBehaviour
 
         frogs.Remove(frog);
 
-#if UNITY_EDITOR
-
-        EditorUtility.SetDirty(this);
-        EditorSceneManager.MarkSceneDirty(gameObject.scene);
-        EditorSceneManager.SaveOpenScenes();
-
-#endif
     }
 }

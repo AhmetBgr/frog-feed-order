@@ -71,7 +71,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6241903763993181770}
   coord: {x: 0, y: 0}
-  type: 1
+  type: 2
   color: 0
   view: {fileID: 4719265725870253153}
   dir: {x: 0, y: 0}
@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82b9aff4fb90a15428e2a0966392e851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cell: {fileID: 0}
   modal: {fileID: 8971673916163357929}
   view: {fileID: 4719265725870253153}
 --- !u!1 &7794628042855945812

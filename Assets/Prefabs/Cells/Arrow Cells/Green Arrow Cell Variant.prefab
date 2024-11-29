@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5047558776158778033}
     m_Modifications:
+    - target: {fileID: 2292867106981333176, guid: a301dfe573353c545a1d7424fb8bfd48,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 2069254330175698323}
     - target: {fileID: 4699702980476568804, guid: a301dfe573353c545a1d7424fb8bfd48,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -142,7 +147,7 @@ PrefabInstance:
     - target: {fileID: 5919836724611207648, guid: dbac5b47c065bf14e8d50d6b18e9f4c7,
         type: 3}
       propertyPath: m_Name
-      value: Green Cell Variant Variant
+      value: Green Arrow Cell Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -153,6 +158,18 @@ PrefabInstance:
       addedObject: {fileID: 1460349885789207226}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbac5b47c065bf14e8d50d6b18e9f4c7, type: 3}
+--- !u!114 &2069254330175698323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4874856266391266583, guid: dbac5b47c065bf14e8d50d6b18e9f4c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 6850397433287479428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5047558776158778033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1809611271419486773, guid: dbac5b47c065bf14e8d50d6b18e9f4c7,

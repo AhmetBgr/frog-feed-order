@@ -13,6 +13,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grape Yellow Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4910923826892601534, guid: 8a53d7a28cdc90f4c8d16157061e5b3f,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 916152350702514548}
     - target: {fileID: 5384164539862790633, guid: 8a53d7a28cdc90f4c8d16157061e5b3f,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -92,7 +97,7 @@ PrefabInstance:
     - target: {fileID: 4562497570040020151, guid: 1efd74f4c0c634d4a832a6184d55d822,
         type: 3}
       propertyPath: m_Name
-      value: Yellow Cell Variant Variant
+      value: Yellow Grape Cell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8388874193928867682, guid: 1efd74f4c0c634d4a832a6184d55d822,
         type: 3}
@@ -153,6 +158,18 @@ PrefabInstance:
       addedObject: {fileID: 5004751462793554945}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1efd74f4c0c634d4a832a6184d55d822, type: 3}
+--- !u!114 &916152350702514548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3373394639477573696, guid: 1efd74f4c0c634d4a832a6184d55d822,
+    type: 3}
+  m_PrefabInstance: {fileID: 2478782136380274996}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6200651407634593366 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8388874193928867682, guid: 1efd74f4c0c634d4a832a6184d55d822,

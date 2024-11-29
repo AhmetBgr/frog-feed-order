@@ -21,7 +21,7 @@ PrefabInstance:
     - target: {fileID: 4562497570040020151, guid: 1efd74f4c0c634d4a832a6184d55d822,
         type: 3}
       propertyPath: m_Name
-      value: Yellow Cell Variant Variant
+      value: Yellow Arrow Cell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8388874193928867682, guid: 1efd74f4c0c634d4a832a6184d55d822,
         type: 3}
@@ -82,6 +82,18 @@ PrefabInstance:
       addedObject: {fileID: 3938423211843732755}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1efd74f4c0c634d4a832a6184d55d822, type: 3}
+--- !u!114 &2950717592965876178 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3373394639477573696, guid: 1efd74f4c0c634d4a832a6184d55d822,
+    type: 3}
+  m_PrefabInstance: {fileID: 442402287537521042}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b185cb0315dd429e30af72ad39140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8235111380473925360 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8388874193928867682, guid: 1efd74f4c0c634d4a832a6184d55d822,
@@ -96,6 +108,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8235111380473925360}
     m_Modifications:
+    - target: {fileID: 2592860996969157785, guid: 098b34cc3fabee64384a33c57b460881,
+        type: 3}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 2950717592965876178}
     - target: {fileID: 5402699835605049636, guid: 098b34cc3fabee64384a33c57b460881,
         type: 3}
       propertyPath: m_Name

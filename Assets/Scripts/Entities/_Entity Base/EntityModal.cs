@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum EntityType {
+    None,
     Frog,
     Grape,
     Arrow
 }
-
 public enum EntityColor {
     Blue,
     Purple,
@@ -17,18 +17,14 @@ public enum EntityColor {
     Yellow
 }
 
-public class EntityModal : MonoBehaviour
-{
+public class EntityModal : MonoBehaviour{
     public GameObject prefab;
     public Vector2Int coord;
     public EntityType type;
     public EntityColor color;
     public EntityView view;
     public Vector2Int dir;
-    //public bool isVisited = false;
-
     public bool isExpired = false;
-
 
     public event Action OnExpire;
 
@@ -43,4 +39,5 @@ public class EntityModal : MonoBehaviour
 
         OnExpire?.Invoke();
     }
+
 }
