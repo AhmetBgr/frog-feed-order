@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour{
         else {
             instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     public void PlaySound(SoundEffect sound, float delay = 0f, bool playReverse = false) {
@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour{
         AudioSource audioSource = GetAudioSource();
 
         if (sound == null | audioSource == null) {
-            Debug.LogWarning("sound did not played");
+            Debug.LogWarning("couldn't get an audio source.");
             return;
         } 
 
@@ -37,15 +37,18 @@ public class AudioManager : MonoBehaviour{
         yield return new WaitForSecondsRealtime(delay);
 
         sound.Play(audioSource);
+
+        // Returns audio source to object pool when finished playing
         StartCoroutine(WaitForSound(audioSource, () => ObjectPooler.instance.AddToPool(audioSource.name, audioSource.gameObject)));
     }
 
     private IEnumerator WaitForSound(AudioSource source, Action onCompleteCallBack) {
-        //Wait Until Sound has finished playing
+        //Wait until sound has finished playing
         yield return new WaitForSeconds(source.clip.length);
 
         source.clip = null;
 
+        // Trigger event
         onCompleteCallBack?.Invoke();
     }
 

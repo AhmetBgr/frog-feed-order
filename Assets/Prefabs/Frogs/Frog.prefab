@@ -255,13 +255,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62970d4fe4cd0774ab205097fee5d88b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 9036005969333822343}
   coord: {x: 0, y: 0}
   type: 1
   color: 0
   view: {fileID: 9212175779826650880}
   dir: {x: 0, y: 0}
   isExpired: 0
+  initPos: {x: 0, y: 0, z: 0}
 --- !u!114 &9212175779826650880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd98ec3880b8fe4e8649ffc412e06ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityModal: {fileID: 7530044279479584224}
   cell: {fileID: 0}
   modal: {fileID: 7530044279479584224}
   view: {fileID: 9212175779826650880}

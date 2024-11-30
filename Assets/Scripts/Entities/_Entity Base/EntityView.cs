@@ -10,7 +10,6 @@ public class EntityView : MonoBehaviour
     public SoundEffect punchScaleSFX;
     public SoundEffect entityDenySFX;
 
-
     protected virtual void OnEnable() {
 
         FrogController.OnTongueMove += PlayPunchScaleAnim;
@@ -41,7 +40,6 @@ public class EntityView : MonoBehaviour
 
         transform.DOPunchScale(scale, duration, vibrato:1).SetDelay(delay);
     }
-
     public virtual void AnimatePunchPos(Vector3 dir, float duration, float delay = 0f, SoundEffect sound = null) {
         if (sound)
             AudioManager.instance.PlaySound(sound, delay);

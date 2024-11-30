@@ -23,19 +23,24 @@ public class UIController : MonoBehaviour
 
     private void OnEnable() {
         GameManager.instance.OnMovesCountChanged += UpdateMoveCounterText;
-        Game.onStateChanged += TryOpenCorrectPanel;
+        GameManager.onLevelComplete += OpenLevelCompletePanel;
+        GameManager.onGameOver += OpenGameOverPanel;
+
         LevelManager.OnLeveload += UpdateLevelNameText;
     }
 
     private void OnDisable() {
         GameManager.instance.OnMovesCountChanged -= UpdateMoveCounterText;
-        Game.onStateChanged -= TryOpenCorrectPanel;
+        GameManager.onLevelComplete -= OpenLevelCompletePanel;
+        GameManager.onGameOver -= OpenGameOverPanel;
+
+
         LevelManager.OnLeveload -= UpdateLevelNameText;
     }
 
     private void Start() {
-        restartButton.onClick.AddListener(LevelManager.instance.ReloadCurScene);
-        nextButton.onClick.AddListener(LevelManager.instance.LoadNextScene);
+        restartButton.onClick.AddListener(LevelManager.instance.ReloadCurLevel);
+        nextButton.onClick.AddListener(LevelManager.instance.LoadNextLevel);
     }
 
     void UpdateMoveCounterText(int movesCount){
@@ -53,20 +58,30 @@ public class UIController : MonoBehaviour
         levelNameText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
     }
 
-    private void TryOpenCorrectPanel(State state) {
+    private void OpenLevelCompletePanel() {
 
-        if(state == State.LevelComplete) {
-            levelCompletePanel.gameObject.SetActive(true);
-            Vector3 initScale = levelCompletePanel.localScale;
-            levelCompletePanel.localScale = Vector3.zero;
-            levelCompletePanel.DOScale(initScale, 0.5f);
+        levelCompletePanel.gameObject.SetActive(true);
+        Vector3 initScale = levelCompletePanel.localScale;
+        levelCompletePanel.localScale = Vector3.zero;
+        levelCompletePanel.DOScale(initScale, 0.5f);
+
+        /*if (state == State.LevelComplete) {
+
         }
         else if(state == State.GameOver) {
             gameOverPanel.gameObject.SetActive(true);
             Vector3 initScale = gameOverPanel.localScale;
             gameOverPanel.localScale = Vector3.zero;
-            gameOverPanel.DOScale(initScale, 1.5f);
-        }
+            gameOverPanel.DOScale(initScale, 2f).SetDelay(0.5f);
+        }*/
 
+    }
+
+    private void OpenGameOverPanel() {
+
+        gameOverPanel.gameObject.SetActive(true);
+        Vector3 initScale = gameOverPanel.localScale;
+        gameOverPanel.localScale = Vector3.zero;
+        gameOverPanel.DOScale(initScale, 2f).SetDelay(0.5f);
     }
 }

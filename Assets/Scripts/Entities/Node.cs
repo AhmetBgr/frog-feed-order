@@ -14,6 +14,7 @@ public class Node : MonoBehaviour{
     void Start(){
         gridManager = GridManager.instance;
     }
+
     public void UpdateTopCell() {
         cells.Clear();
         for (int i = 0; i < transform.childCount; i++) {

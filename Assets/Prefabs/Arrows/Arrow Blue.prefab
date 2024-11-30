@@ -47,13 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f1ecf36a86bd04d868cbc1b4d77300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7335310659837104295}
   coord: {x: 0, y: 0}
   type: 3
   color: 0
   view: {fileID: 3560997266780914725}
   dir: {x: 0, y: 0}
   isExpired: 0
+  initPos: {x: 0, y: 0, z: 0}
 --- !u!114 &3560997266780914725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b451d2871c85cbc44868cb74cff42607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityModal: {fileID: 3469422469043736317}
   cell: {fileID: 0}
   modal: {fileID: 3469422469043736317}
   view: {fileID: 3560997266780914725}

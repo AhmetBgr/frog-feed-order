@@ -21,11 +21,17 @@ public class LevelGizmo : MonoBehaviour
     void OnDrawGizmos() {
         if (drawEnabled) {
             Gizmos.color = color;
-            Gizmos.DrawWireCube(pos, new Vector3(1f, 0.1f, 1f));
+            Gizmos.DrawWireCube(pos, new Vector3(1f, 0.5f, 1f));
 
             // Additional draws to make it look thicker, unneceserray otherwise.
-            Gizmos.DrawWireCube(pos + (new Vector3(1f, 0.05f, 1f) * 0.01f), new Vector3(1f, 0.05f, 1f));
-            Gizmos.DrawWireCube(pos - (new Vector3(1f, 0.05f, 1f) * 0.01f), new Vector3(1f, 0.05f, 1f));
+            Gizmos.DrawWireCube(pos + (new Vector3(1f, 0.05f, 1f) * 0.01f), new Vector3(1f, 0.5f, 1f));
+            Gizmos.DrawWireCube(pos - (new Vector3(1f, 0.05f, 1f) * 0.01f), new Vector3(1f, 0.5f, 1f));
+
+            Gizmos.DrawLine(pos + Vector3.up*1.3f, pos + Vector3.down);
+
+            // Additional draws to make it look thicker, unneceserray otherwise.
+            Gizmos.DrawLine((pos + Vector3.up * 1.3f) + (new Vector3(1f, 0f, -1f) * 0.01f), pos + Vector3.down + (new Vector3(1f, 0f, -1f) * 0.01f));
+            Gizmos.DrawLine((pos + Vector3.up * 1.3f) - (new Vector3(1f, 0f, -1f) * 0.01f), pos + Vector3.down - (new Vector3(1f, 0f, -1f) * 0.01f));
         }
     }
 #endif

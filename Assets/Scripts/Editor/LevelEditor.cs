@@ -183,7 +183,7 @@ public class LevelEditor : EditorWindow {
     }
 
     private void RotateEntity(Node node) {
-        EntityModal entity = node.topCell?.entity;
+        EntityModal entity = node.topCell?.entity.entityModal;
 
        
         if (entity == null || entity.type == EntityType.Grape) {
@@ -253,7 +253,7 @@ public class LevelEditor : EditorWindow {
         Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f)) {
-            return Utils.Vec3ToInt(hit.transform.position); // + hit.normal.normalized
+            return Utils.Vec3ToInt(hit.transform.position) + (hit.normal * 0.2f); // + hit.normal.normalized
         }
 
         return Vector3.one * 999; // Return an out of grid position

@@ -10,12 +10,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<FrogModal> frogs = new List<FrogModal>();
 
-    //public FrogModal[] frogs;
+    [SerializeField] private SoundEffect levelCompleteSFX;
+    [SerializeField] private SoundEffect gameOverSFX;
 
     [SerializeField] private int _movesCount;
 
-    public SoundEffect levelCompleteSFX;
-    public SoundEffect gameOverSFX;
+    public static event Action onLevelComplete;
+    public static event Action onGameOver;
 
 
     public int movesCount {
@@ -41,93 +42,83 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void Start() {
-        movesCount = _movesCount; // makes sure value given in inspector is triggered for event
-
-        //Reset(0);
-    }
-
     private void OnEnable() {
         FrogController.OnInteracted += DecreaseMoveCount;
-        FrogModal.onFrogExpire += CheckforLevelComplete;
+        FrogController.onFrogExpire += CheckforLevelComplete;
         LevelManager.OnLeveload += Reset;
     }
 
     private void OnDisable() {
         FrogController.OnInteracted -= DecreaseMoveCount;
-        FrogModal.onFrogExpire -= CheckforLevelComplete;
+        FrogController.onFrogExpire -= CheckforLevelComplete;
         LevelManager.OnLeveload -= Reset;
-
     }
 
     private void Reset(int levelIndex) {
         Game.state = State.Playing;
 
-
-        /*frogs.Clear();
-
-        FrogModal[] frogsArray = FindObjectsOfType<FrogModal>(true);
-
-        foreach (var item in frogsArray) {
-            frogs.Add(item);
-        }
-        */
-
         movesCount = LevelManager.instance.curSerializedLevel.movesCount;
     }
 
     private void TriggerOnMoveCountChanged() {
-
-
         OnMovesCountChanged?.Invoke(movesCount);
-
-        Debug.Log("shoud trigger on move count chenged:" + movesCount);
-
-
-
     }
 
     private void DecreaseMoveCount() {
         movesCount--;
 
         CheckForGameOver();
+
+        //CheckforLevelComplete();
     }
 
     private void CheckForGameOver() {
-        if (movesCount <= 0) {
+        if (movesCount <= 0 && Game.state == State.Playing) {
             // Lose Condition
             Game.SetState(State.GameOver);
-            AudioManager.instance.PlaySound(gameOverSFX, delay: 0.2f);
+            AudioManager.instance.PlaySound(gameOverSFX, delay: 0.5f);
+            onGameOver?.Invoke();
+            frogs.Clear();
+
             return;
         }
     }
 
-    private void CheckforLevelComplete() {
-        // check for level complete
+    private void CheckforLevelComplete(float delay) {
+        if (Game.state != State.Playing) return;
 
+        // Check if all frogs are expired
         foreach (var item in frogs) {
             if (!item.isExpired) {
+                CheckForGameOver();
                 return;
             }
         }
 
+        frogs.Clear();
+
         // Trigger Level complete event
         Game.SetState(State.LevelComplete);
-        AudioManager.instance.PlaySound(levelCompleteSFX);
 
+        StartCoroutine(TriggerOnLevelComplete(delay));
+    }
+
+    private IEnumerator TriggerOnLevelComplete(float delay) {
+        yield return new WaitForSecondsRealtime(delay);
+
+        AudioManager.instance.PlaySound(levelCompleteSFX);
+        onLevelComplete?.Invoke();
     }
 
     public void AddToFrogsPool(FrogModal frog) {
         if (frogs.Contains(frog)) return;
 
         frogs.Add(frog);
-
     }
+
     public void RemoveFromFrogsPool(FrogModal frog) {
         if (!frogs.Contains(frog)) return;
 
-
         frogs.Remove(frog);
-
     }
 }

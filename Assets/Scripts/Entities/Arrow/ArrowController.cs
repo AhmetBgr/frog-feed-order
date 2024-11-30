@@ -8,12 +8,21 @@ public class ArrowController : EntityController
     public EntityView view;
 
 
-    protected void OnEnable() {
+    protected override void OnEnable() {
+        base.OnEnable();
+
         FrogController.OnSuccessfullEat += HandleExpiration;
     }
 
-    protected void OnDisable() {
+    protected override void OnDisable() {
+        base.OnDisable();
         FrogController.OnSuccessfullEat -= HandleExpiration;
+    }
+
+    public override void OnSpawn() {
+        base.OnSpawn();
+
+        UpdateDirection();
     }
 
     private void HandleExpiration(List<Vector2Int> tonguePathCoord, List<Vector3> tonguePath) {
@@ -25,7 +34,7 @@ public class ArrowController : EntityController
             float retractDelay = CalculateRecractDelay(tonguePath.Count, index);
             view.AnimateScale(Vector3.zero, Game.tongueMoveDur, (tonguePath.Count - 1) * Game.tongueMoveDur * 1.8f + (index * 0.2f * Game.tongueMoveDur), () => gameObject.SetActive(false)); //(tonguePath.Count - index + tonguePath.Count) * Game.tongueMoveDur
 
-            StartCoroutine(modal.TriggerOnExpire(retractDelay + Game.tongueMoveDur / 2));
+            StartCoroutine(TriggerOnExpire(retractDelay + Game.tongueMoveDur / 2));
         }
     }
 

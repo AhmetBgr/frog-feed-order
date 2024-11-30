@@ -18,7 +18,7 @@ MonoBehaviour:
   volume: 1
   volumeRandom: {x: 0.5, y: 0.5}
   useRandomPitch: 1
-  pitch: 2
+  pitch: 0.5
   pitchRandom: {x: 1.5, y: 2}
   playOrder: 0
   playIndex: 0

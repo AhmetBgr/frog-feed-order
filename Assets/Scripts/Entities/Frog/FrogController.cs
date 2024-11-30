@@ -16,9 +16,29 @@ public class FrogController : EntityController{
     public static event Action<List<Vector2Int>, EntityColor> OnTongueMove;
     public static event Action<List<Vector2Int>, List<Vector3>> OnSuccessfullEat;
 
-    void Start(){
+    // we need seperate event from the EntityModal Class as well because 
+    // GameManager needs to track it specificly for frogs
+    public static event Action<float> onFrogExpire;
+
+    protected  void Start(){
+        //base.Start();
+
         modal.view = view;
         gridManager = GridManager.instance;
+    }
+
+
+    public override void OnSpawn() {
+        base.OnSpawn();
+        UpdateDirection();
+        GameManager.instance.AddToFrogsPool(modal);
+
+    }
+
+    public override IEnumerator TriggerOnExpire(float delay = 0) {
+        onFrogExpire?.Invoke(delay);
+
+        yield return base.TriggerOnExpire(delay);
     }
 
     private void OnMouseDown() {
@@ -32,8 +52,11 @@ public class FrogController : EntityController{
         List<Vector3> tonguePath = GetTonguePath();
 
         OnInteracted?.Invoke();
- 
+
+        if (Game.state == State.GameOver) return;
+
         view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, () => { isBusy = false; });
+
     }
 
     private List<Vector3> GetTonguePath() {
@@ -47,7 +70,7 @@ public class FrogController : EntityController{
 
         Vector2Int tongueDir = modal.dir;
 
-        EntityModal nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(modal.coord, tongueDir));
+        EntityModal nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(modal.coord, tongueDir))?.entityModal;
 
         if (nextEntity == null) {
             Debug.LogWarning($"Next cell has no entity: {gridManager.GetNextCoord(modal.coord, tongueDir)}");
@@ -78,7 +101,7 @@ public class FrogController : EntityController{
 
             // Update delay and get the next entity
             delay += Game.tongueMoveDur;
-            nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(nextEntity.coord, tongueDir));
+            nextEntity = gridManager.GetEntity(gridManager.GetNextCoord(nextEntity.coord, tongueDir))?.entityModal;
         }
 
         if (CanEat(nextEntity)) {
@@ -89,7 +112,8 @@ public class FrogController : EntityController{
 
             // Trigger expiration event with delay,
             // delay is calculated based on tongue path long and unit move dur
-            StartCoroutine(modal.TriggerOnExpire((tonguePath.Count - 0.5f) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
+            modal.isExpired = true;
+            StartCoroutine(TriggerOnExpire((tonguePath.Count - 0.5f) * Game.tongueMoveDur * 2 + Game.tongueMoveDur));
         }
 
         // Trigger event
@@ -106,6 +130,17 @@ public class FrogController : EntityController{
 
     // Checks if frog can succesfully eat
     private bool CanEat(EntityModal entity) {
+        bool hasGrape = false;
+
+        foreach (var item in visitedEntities) {
+            if (item.type == EntityType.Grape) {
+                hasGrape = true;
+                break;
+            }
+        }
+
+        if (!hasGrape) return false;
+
         return !entity || entity.type == EntityType.Frog || (entity.type == EntityType.Grape && entity.color == modal.color);
     }
 }

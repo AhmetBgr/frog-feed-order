@@ -5,21 +5,6 @@ using UnityEngine;
 
 public class FrogModal : DirectionalEntityModal { 
 
-    // we need seperate event from the EntityModal Class as well because 
-    // GameManager needs to track it specificly for frogs
-    public static event Action onFrogExpire;
 
-    public override IEnumerator TriggerOnExpire(float delay = 0) {
-        yield return base.TriggerOnExpire(delay);
-        isExpired = true;
-        onFrogExpire?.Invoke();
-    }
-
-    public override void OnSpawn() {
-        base.OnSpawn();
-
-        Start();
-
-        GameManager.instance.AddToFrogsPool(this);
-    }
+    
 }

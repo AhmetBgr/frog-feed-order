@@ -9,18 +9,31 @@ public class GrapeController : EntityController
 
     private const float retractDelayFactor = 0.3f;
 
-    private void Start() {
-        // We need to seperate grapes from cell parent beacuse,
-        // Cell has scale animation which ruins retract animation
-        //transform.SetParent(null);
-    }
 
-    protected void OnEnable() {
+    protected override void OnEnable() {
+        base.OnEnable();
         FrogController.OnSuccessfullEat += HandleRecractAnim;
     }
 
-    protected void OnDisable() {
+    protected override void OnDisable() {
+        base.OnDisable();
+
         FrogController.OnSuccessfullEat -= HandleRecractAnim;
+    }
+
+    public override void OnSpawn() {
+        base.OnSpawn();
+
+
+        // We need to seperate grapes from cell parent beacuse,
+        // Cell has scale animation which ruins retract animation
+        transform.SetParent(null);
+    }
+
+    public override IEnumerator TriggerOnExpire(float delay = 0) {
+        yield return base.TriggerOnExpire(delay);
+
+        //transform.SetParent(cell.transform);
     }
 
     private void HandleRecractAnim(List<Vector2Int> tonguePathCoord, List<Vector3> tonguePath) {
@@ -30,9 +43,9 @@ public class GrapeController : EntityController
             path.AddRange(tonguePath.GetRange(0, index )); 
 
             float retractDelay = CalculateRecractDelay(tonguePath.Count, index);
-            view.PlayRetractAnim(path, Game.tongueMoveDur, retractDelay, () => transform.SetParent(cell.transform)); 
+            view.PlayRetractAnim(path, Game.tongueMoveDur, retractDelay, () => transform.SetParent(cell.transform));  //, () => transform.SetParent(cell.transform)
 
-            StartCoroutine(modal.TriggerOnExpire(retractDelay + (Game.tongueMoveDur * (tonguePath.Count - index - 1))));
+            StartCoroutine(TriggerOnExpire(retractDelay + (Game.tongueMoveDur * (tonguePath.Count - index - 1))));
         }
     }
 

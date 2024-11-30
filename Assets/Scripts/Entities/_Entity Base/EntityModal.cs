@@ -25,9 +25,8 @@ public class EntityModal : MonoBehaviour{
     public Vector2Int dir;
     public bool isExpired = false;
 
-    private Vector3 initPos;
+    public Vector3 initPos;
 
-    public event Action OnExpire;
 
     private void Awake() {
         initPos = transform.localPosition;
@@ -40,17 +39,6 @@ public class EntityModal : MonoBehaviour{
 
     }
 
-    public virtual IEnumerator TriggerOnExpire(float delay = 0) {
 
-        yield return new WaitForSecondsRealtime(delay);
-
-        OnExpire?.Invoke();
-    }
-
-    public virtual void OnSpawn() {
-        isExpired = false;
-        transform.localPosition = initPos;
-        coord = Utils.PosToCoord(transform.position);
-    }
 
 }
