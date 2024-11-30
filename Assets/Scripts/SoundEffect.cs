@@ -91,7 +91,7 @@ public class SoundEffect : ScriptableObject {
         source.pitch = playReverse ? -source.pitch : source.pitch;
         source.time = source.pitch < 0 ? source.clip.length - 0.001f : 0f;
 
-        source.Play();
+        source.PlayOneShot(source.clip);
         //source.PlayOneShot(source.clip);
 
         /*#if UNITY_EDITOR

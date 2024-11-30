@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour{
-    public List<AudioSource> audioSources = new List<AudioSource>();
     public GameObject audioSourcePrefab;
 
     public static AudioManager instance;
@@ -28,7 +28,6 @@ public class AudioManager : MonoBehaviour{
         } 
 
         StartCoroutine(PlaySoundWithDelay(sound, delay, audioSource, playReverse)); 
-        //audioSource.PlayOneShot(sound);
     }
 
 
@@ -38,23 +37,39 @@ public class AudioManager : MonoBehaviour{
         yield return new WaitForSecondsRealtime(delay);
 
         sound.Play(audioSource);
+        StartCoroutine(WaitForSound(audioSource, () => ObjectPooler.instance.AddToPool(audioSource.name, audioSource.gameObject)));
+    }
+
+    private IEnumerator WaitForSound(AudioSource source, Action onCompleteCallBack) {
+        //Wait Until Sound has finished playing
+        yield return new WaitForSeconds(source.clip.length);
+
+        source.clip = null;
+
+        onCompleteCallBack?.Invoke();
     }
 
     private AudioSource GetAudioSource() {
-        for (int i = 0; i < audioSources.Count; i++) {
-            if (audioSources[i].isPlaying)
-                continue;
-            else {
+        const int maxAttempts = 100; // Avoid infinite looping by limiting attempts
+        int attempts = 0;
 
-                audioSources[i].clip = null;
-                return audioSources[i];
+        while (attempts < maxAttempts) {
+            AudioSource audioSource = ObjectPooler.instance.SpawnFromPool(audioSourcePrefab.name).GetComponent<AudioSource>();
 
+            if (!audioSource.isPlaying && audioSource.clip == null) {
+                audioSource.transform.SetParent(transform);
+                return audioSource;
             }
+
+            // If the AudioSource is not valid, add it back to the pool and try again.
+            ObjectPooler.instance.AddToPool(audioSourcePrefab.name, audioSource.gameObject);
+
+            attempts++;
         }
-        AudioSource audioSource = Instantiate(audioSourcePrefab, Vector3.zero, Quaternion.identity).GetComponent<AudioSource>();
-        audioSource.transform.SetParent(this.transform);
-        audioSources.Add(audioSource);
-        return audioSource;
+
+        // If no valid AudioSource is found after maxAttempts, log an error.
+        Debug.LogError("Failed to find a valid AudioSource after multiple attempts.");
+        return null; // Return null to indicate failure.
     }
 
 }
