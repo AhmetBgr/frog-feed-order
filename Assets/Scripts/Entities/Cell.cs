@@ -31,9 +31,10 @@ public class Cell : MonoBehaviour, IPoolableObject {
     public virtual void HandleOnExpire() {
         if (!entity) return;
 
+        // Make sure entites has parent as this cell
         entity.transform.SetParent(transform);
 
-        StartCoroutine(entity.TriggerOnExpire(0.2f));
+        StartCoroutine(entity.TriggerOnExpire(0.5f));
 
     }
 
@@ -43,7 +44,7 @@ public class Cell : MonoBehaviour, IPoolableObject {
     }
 
     public void AnimateScale() {
-        transform.DOScale(0f, 0.5f).OnComplete(() => {
+        transform.DOScale(0f, 0.3f).OnComplete(() => {
             ReturnToPool();
         });
     }

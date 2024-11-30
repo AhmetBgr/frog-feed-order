@@ -31,9 +31,13 @@ public class FrogView : EntityView{
         for (int i = 0; i < pointsCount - 1; i++) {
             float startTime = Time.time;
 
+
             Vector3 startPosition = tonguePath[i];
             Vector3 endPosition = tonguePath[i + 1];
             Vector3 pos = startPosition;
+
+
+
             while (pos != endPosition) {
 
                 t = segmentDuration == 0 ? 1 : ((Time.time - startTime) / segmentDuration);
@@ -47,8 +51,13 @@ public class FrogView : EntityView{
 
                 yield return null;
             }
+
         }
+
+
+
         yield return new WaitForSecondsRealtime(segmentDuration / 2);
+
 
         // Retract tongue anim
 
@@ -59,6 +68,8 @@ public class FrogView : EntityView{
             Vector3 startPosition = tonguePath[i - 1];
             Vector3 endPosition = tonguePath[i];
             Vector3 pos = endPosition;
+
+
 
             while (pos != startPosition) {
                 float t = (Time.time - startTime) / segmentDuration;
@@ -71,6 +82,7 @@ public class FrogView : EntityView{
                 }
                 yield return null;
             }
+
         }
 
         // Trigger on complete event 

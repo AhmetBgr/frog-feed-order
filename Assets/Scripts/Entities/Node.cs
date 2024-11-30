@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 
 public class Node : MonoBehaviour{
 
@@ -15,6 +13,7 @@ public class Node : MonoBehaviour{
         gridManager = GridManager.instance;
     }
 
+    // Updates top cell and disables other cell's entities
     public void UpdateTopCell() {
         cells.Clear();
         for (int i = 0; i < transform.childCount; i++) {
@@ -31,48 +30,34 @@ public class Node : MonoBehaviour{
         topCell = cells[cells.Count - 1];
 
     }
-    public void RemoveTopCell() {
+    public Cell RemoveTopCell() {
         if (topCell.entity == null) {
+            // Prevent removing the base cell
             Debug.LogWarning("tried to remove base cell");
-            return;
+            return null;
         }
-        cells.RemoveAt(cells.Count - 1);
+        Cell cellToRemove = cells[cells.Count - 1]; 
+
+        cells.Remove(cellToRemove);
 
         topCell = cells[cells.Count - 1];
 
-        if (!topCell.entity) return;
+        if (!topCell.entity) return cellToRemove;
 
         topCell.entity.gameObject.SetActive(true);
+
+        return cellToRemove;
     }
 
-    public void DeleteTopCell() {
+    // Level editor uses this funtion to destroy the top cell
+    public void DestroyTopCell() {
         UpdateTopCell();
-        if (transform.childCount <= 1) return;
 
-        if (cells.Count >= 3) {
-            cells[cells.Count - 2].entity.gameObject.SetActive(true);
-        }
-
-        Cell cell = cells[cells.Count - 1];
-
-        if (!Application.isPlaying) {
-            EditorUtility.SetDirty(cell.gameObject);
-
-            EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            EditorSceneManager.SaveOpenScenes();
-        }
-
-        cells.Remove(cell);
-
-        DestroyImmediate(transform.GetChild(transform.childCount - 1).gameObject);
-
-
+        DestroyImmediate(RemoveTopCell().gameObject);
     }
 
+    // Level editor uses this funtion to add a cell to the top
     public void AddCell(EntityType type, EntityColor color) {
-        UpdateTopCell();
-
-
         if (gridManager == null && transform.parent != null)
             transform.parent.TryGetComponent(out gridManager);
 
@@ -83,20 +68,10 @@ public class Node : MonoBehaviour{
         GameObject cell = Instantiate(prefab, position: transform.GetChild(transform.childCount-1).position + (Vector3.up * 0.1f), Quaternion.identity);
         cell.transform.SetParent(transform);
 
-        if (topCell.entity != null)
-            topCell.entity.gameObject.SetActive(false);
-
-        topCell = cell.GetComponent<Cell>();
-
-
         cells.Add(topCell);
 
-        if (!Application.isPlaying) {
-            EditorUtility.SetDirty(topCell.gameObject);
+        UpdateTopCell();
 
-            EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            EditorSceneManager.SaveOpenScenes();
-        }
     }
 
 }

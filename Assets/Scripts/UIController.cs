@@ -65,6 +65,11 @@ public class UIController : MonoBehaviour
         levelCompletePanel.localScale = Vector3.zero;
         levelCompletePanel.DOScale(initScale, 0.5f);
 
+
+        // Disable next level button when completed the final level
+        if (LevelManager.currentLevelIndex >= LevelManager.instance.levels.Count - 1)
+            nextButton.gameObject.SetActive(false);
+
         /*if (state == State.LevelComplete) {
 
         }

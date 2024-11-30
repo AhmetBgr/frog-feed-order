@@ -9,10 +9,10 @@ public class GrapeController : EntityController
 
     private const float retractDelayFactor = 0.3f;
 
-
     protected override void OnEnable() {
         base.OnEnable();
         FrogController.OnSuccessfullEat += HandleRecractAnim;
+
     }
 
     protected override void OnDisable() {
@@ -30,6 +30,7 @@ public class GrapeController : EntityController
         transform.SetParent(null);
     }
 
+
     public override IEnumerator TriggerOnExpire(float delay = 0) {
         yield return base.TriggerOnExpire(delay);
 
@@ -45,7 +46,7 @@ public class GrapeController : EntityController
             float retractDelay = CalculateRecractDelay(tonguePath.Count, index);
             view.PlayRetractAnim(path, Game.tongueMoveDur, retractDelay, () => transform.SetParent(cell.transform));  //, () => transform.SetParent(cell.transform)
 
-            StartCoroutine(TriggerOnExpire(retractDelay + (Game.tongueMoveDur * (tonguePath.Count - index - 1))));
+            StartCoroutine(TriggerOnExpire(retractDelay + (Game.tongueMoveDur * (tonguePath.Count - index -1))));
         }
     }
 

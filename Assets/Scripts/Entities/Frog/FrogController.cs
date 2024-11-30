@@ -20,6 +20,7 @@ public class FrogController : EntityController{
     // GameManager needs to track it specificly for frogs
     public static event Action<float> onFrogExpire;
 
+
     protected  void Start(){
         //base.Start();
 
@@ -55,7 +56,7 @@ public class FrogController : EntityController{
 
         if (Game.state == State.GameOver) return;
 
-        view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, () => { isBusy = false; });
+        view.PlayTongueAnimation(tonguePath, Game.tongueMoveDur, onCompleteCallBack: () => { isBusy = false; });
 
     }
 

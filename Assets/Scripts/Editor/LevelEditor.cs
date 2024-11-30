@@ -171,7 +171,7 @@ public class LevelEditor : EditorWindow {
 
         switch (selectedActionIndex) {
             case 1:
-            targetNode.DeleteTopCell();
+            targetNode.DestroyTopCell();
             break;
             case 2:
             RotateEntity(targetNode);

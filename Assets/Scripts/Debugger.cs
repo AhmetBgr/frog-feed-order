@@ -16,7 +16,7 @@ public class Debugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        /*if (Input.GetKeyDown(KeyCode.Space)) {
 
             if (resetTargetFps) {
                 resetTargetFps = false;
@@ -27,7 +27,7 @@ public class Debugger : MonoBehaviour
                 Application.targetFrameRate = 75;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Backspace)) {
+        else*/ if (Input.GetKeyDown(KeyCode.Backspace)) {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
