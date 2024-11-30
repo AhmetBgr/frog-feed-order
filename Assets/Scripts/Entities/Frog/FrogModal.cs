@@ -11,7 +11,7 @@ public class FrogModal : DirectionalEntityModal {
 
     public override IEnumerator TriggerOnExpire(float delay = 0) {
         yield return base.TriggerOnExpire(delay);
-
+        isExpired = true;
         onFrogExpire?.Invoke();
     }
 

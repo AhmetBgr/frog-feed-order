@@ -135,11 +135,19 @@ public class LevelManager : MonoBehaviour{
         foreach (var serializedCellObject in serializedNodeObject.cellObjects) {
 
             GameObject go = null;
-            
-            go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""));
-            
+            if(Application.isPlaying)
+                go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""));
+            else {
+                foreach (GameObject prefab in prefabs) {
+                     if (prefab.transform.name == serializedCellObject.prefab) {
+                        go = GameObject.Instantiate(prefab) as GameObject;
+                        break;
+                     }
+                 }
+            }
+
             if (go == null)
-                Debug.LogError("objectPooler returned null");
+                Debug.LogError("couldn't instantiate an object.");
 
             go.transform.parent = node;
             go.transform.localPosition = serializedCellObject.pos;
@@ -147,7 +155,7 @@ public class LevelManager : MonoBehaviour{
 
             // Call the interface method if applicable
             IPoolableObject poolable = go.GetComponent<IPoolableObject>();
-            if (poolable != null) {
+            if (poolable != null && Application.isPlaying) {
                 poolable.OnObjectSpawn();
             }
 

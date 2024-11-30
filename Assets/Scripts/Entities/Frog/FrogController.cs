@@ -82,7 +82,7 @@ public class FrogController : EntityController{
         }
 
         if (CanEat(nextEntity)) {
-            modal.isExpired = true;
+            //modal.isExpired = true;
 
             // Trigger event
             OnSuccessfullEat?.Invoke(tonguePathCoord, tonguePath);

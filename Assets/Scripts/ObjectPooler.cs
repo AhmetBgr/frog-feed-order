@@ -50,11 +50,14 @@ public class ObjectPooler : MonoBehaviour {
     }
 
     public GameObject SpawnFromPool(string name) {
-
+        if (poolDictionary == null) 
+            poolDictionary = new Dictionary<string, List<GameObject>>();
 
         if (!poolDictionary.ContainsKey(name)) {
-            Debug.LogError($"Pool with tag {name} does not exist.");
-            return null;
+
+            List<GameObject> pool = new List<GameObject>();
+            poolDictionary.Add(name, pool);
+            Debug.LogWarning($"Pool with tag {name} does not exist. Creating the pool.");
         }
 
         List<GameObject> objectPool = poolDictionary[name];
