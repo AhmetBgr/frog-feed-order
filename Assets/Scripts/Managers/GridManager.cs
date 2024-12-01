@@ -74,14 +74,23 @@ public class GridManager : MonoBehaviour
             Node node;
 
             if (i >= transform.childCount) {
-                node = ObjectPooler.instance.SpawnFromPool(nodePrefab.name).GetComponent<Node>();
-                //node = Instantiate(nodePrefab, new Vector3(x, 0f, -y), Quaternion.identity).GetComponent<Node>();
-                node.transform.SetParent(transform);
+                if (Application.isPlaying) {
+                    // Gets node object from the pool when playing the game
+
+                    node = ObjectPooler.instance.SpawnFromPool(nodePrefab.name).GetComponent<Node>();
+
+                    node.transform.SetParent(transform);
+                }
+                else {
+                    // Instantiates new node object. This is for when using level editor in scene view
+                    node = Instantiate(nodePrefab, new Vector3(x, 0f, -y), Quaternion.identity).GetComponent<Node>();
+                    node.transform.SetParent(transform);
+                }
             }
             else {
                 node = transform.GetChild(i).GetComponent<Node>();
             }
-            
+
             nodesGrid[x, y] = node;
             node.transform.position = new Vector3(x, 0f, -y);
         }

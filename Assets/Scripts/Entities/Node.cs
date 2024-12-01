@@ -53,6 +53,8 @@ public class Node : MonoBehaviour{
     public void DestroyTopCell() {
         UpdateTopCell();
 
+        if (!topCell.entity) return;
+
         DestroyImmediate(RemoveTopCell().gameObject);
     }
 
@@ -71,7 +73,6 @@ public class Node : MonoBehaviour{
         cells.Add(topCell);
 
         UpdateTopCell();
-
     }
 
 }

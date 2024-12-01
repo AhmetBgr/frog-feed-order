@@ -161,6 +161,7 @@ public class LevelEditor : EditorWindow {
 
     private void ApplyAction() {
         // Find node in mouse position
+        gridManager.PopulateNodesGrid();
         Node targetNode = gridManager.GetNode(Utils.PosToCoord(GetGridPosition(currentEvent.mousePosition)));
 
         if (targetNode == null) {
@@ -243,7 +244,7 @@ public class LevelEditor : EditorWindow {
             Debug.LogWarning("Invalid level name.");
             return;
         }
-
+        gridManager.DestroyAllNodes();
         levelManager.LoadLevel(gridManager.transform, LevelManager.LoadLevelTextFile(levelName));
         movesCount = levelManager.curSerializedLevel.movesCount;
 
