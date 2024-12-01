@@ -5,8 +5,6 @@ using UnityEngine;
 
 [System.Serializable]
 public class SerializedLevel {
-    //public List<SerializedLevelObject> LevelObjects;
-
     public List<SerializedNodeObject> nodeObjects;
     public int movesCount;
 
@@ -18,9 +16,9 @@ public class SerializedLevel {
 
             foreach (Transform cell in node) {
 
-                if (cell.name == "Base Cell") continue;
+                if (cell.name == "Base Cell") continue; // Skip base cell of the node
 
-                cell.name = cell.name.Replace("(Clone)","");
+                cell.name = cell.name.Replace("(Clone)",""); 
 
                 serializedNodeObject.cellObjects.Add(new SerializedCellObject(cell));
             }
@@ -28,10 +26,6 @@ public class SerializedLevel {
             nodeObjects.Add(serializedNodeObject);
         }
         this.movesCount = movesCount;
-
-        /*foreach (Transform child in level.transform) {
-            LevelObjects.Add(new SerializedLevelObject(child));
-        }*/
     }
 }
 

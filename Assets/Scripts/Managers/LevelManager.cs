@@ -10,11 +10,11 @@ public class LevelManager : MonoBehaviour{
 
     public List<TextAsset> levels;
 
-    public static int currentLevelIndex;
+    private ObjectPooler objectPooler;
 
-    [SerializeField] string levelToLoad;
+    public int currentLevelIndex;
 
-    public static event Action<int> OnLeveload;
+    public event Action<int> OnLeveload;
 
     public static LevelManager instance { get; private set; }
 
@@ -28,8 +28,9 @@ public class LevelManager : MonoBehaviour{
         //DontDestroyOnLoad(gameObject); // Make the instance persistent
     }
 
-    void Start()
-    {
+    void Start(){
+        gridManager.DestroyAllNodes();
+
         currentLevelIndex = 0;
         LoadLevel(gridManager.transform, levels[currentLevelIndex]);
     }
@@ -46,16 +47,16 @@ public class LevelManager : MonoBehaviour{
         LoadLevel(gridManager.transform, levels[currentLevelIndex]);
     }
 
-    public void LoadLevel(Transform levelParent, TextAsset textFile, bool clear = true) {
-
+    public void LoadLevel(Transform levelParent, TextAsset textFile) {
         gridManager.PopulateNodesGrid();
 
         SerializedLevel serializedLevel = SerializeLevel(textFile);
 
+        // Spawns cells for each node in the grid if node has any.
         for (int i = 0; i < levelParent.childCount; i++) {
 
             Node node = levelParent.GetChild(i).GetComponent<Node>();
-            InstantiateCells(serializedLevel.nodeObjects[i], gridManager.cellPrefabs, node.transform);
+            GenerateCells(serializedLevel.nodeObjects[i], gridManager.cellPrefabs, node.transform);
 
             node.UpdateTopCell();
         }
@@ -65,7 +66,7 @@ public class LevelManager : MonoBehaviour{
         OnLeveload?.Invoke(currentLevelIndex);
     }
 
-    public static SerializedLevel SerializeLevel(TextAsset textFile) {
+    private SerializedLevel SerializeLevel(TextAsset textFile) {
         return JsonUtility.FromJson<SerializedLevel>(textFile.text);
     }
 
@@ -74,21 +75,23 @@ public class LevelManager : MonoBehaviour{
         return textFile;
     }
 
-    public static void InstantiateCells(SerializedNodeObject serializedNodeObject, GameObject[] prefabs, Transform node) {
-        ObjectPooler objectPooler = FindObjectOfType<ObjectPooler>();
+    private void GenerateCells(SerializedNodeObject serializedNodeObject, GameObject[] prefabs, Transform node) {
+        if(objectPooler == null)
+            objectPooler = FindObjectOfType<ObjectPooler>();
 
+        // Loops through all cells in serialized node data
         foreach (var serializedCellObject in serializedNodeObject.cellObjects) {
-
             GameObject go = null;
-            if(Application.isPlaying)
+            if(Application.isPlaying) // Gets cell object from the pool when playing thegame
                 go = objectPooler.SpawnFromPool(serializedCellObject.prefab.Replace("(Clone)", ""));
-            else {
+            else { 
+                // Instantiates new cell object. This is for when using level editor in scene view
                 foreach (GameObject prefab in prefabs) {
                      if (prefab.transform.name == serializedCellObject.prefab) {
                         go = GameObject.Instantiate(prefab) as GameObject;
                         break;
                      }
-                 }
+                }
             }
 
             if (go == null)
@@ -98,7 +101,7 @@ public class LevelManager : MonoBehaviour{
             go.transform.localPosition = serializedCellObject.pos;
             go.transform.localEulerAngles = serializedCellObject.angles;
 
-            // Call the interface method if applicable
+            // Calls the OnObjectSpawn method if applicable
             IPoolableObject poolable = go.GetComponent<IPoolableObject>();
             if (poolable != null && Application.isPlaying) {
                 poolable.OnObjectSpawn();

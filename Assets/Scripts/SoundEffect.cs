@@ -92,15 +92,6 @@ public class SoundEffect : ScriptableObject {
         source.time = source.pitch < 0 ? source.clip.length - 0.001f : 0f;
 
         source.PlayOneShot(source.clip);
-        //source.PlayOneShot(source.clip);
-
-        /*#if UNITY_EDITOR
-                if (source != previewer) {
-                    Destroy(source.gameObject, source.clip.length / source.pitch);
-                }
-        #else
-                Destroy(source.gameObject, source.clip.length / source.pitch);
-        #endif*/
 
         return source;
     }

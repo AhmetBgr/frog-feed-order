@@ -1,45 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
 public class EntityView : MonoBehaviour
 {
-    public EntityModal modal;
     public SoundEffect punchScaleSFX;
     public SoundEffect entityDenySFX;
 
-    protected virtual void OnEnable() {
-
-        FrogController.OnTongueMove += PlayPunchScaleAnim;
-        
-        // Setup scale anim
-        transform.localScale = Vector3.zero;
-        
-        AnimateScale(Vector3.one, 0.5f);
-    }
-
-    protected virtual void OnDisable() {
-        FrogController.OnTongueMove -= PlayPunchScaleAnim;
-    }
-
-    // Handle the event when it's triggered
-    private void PlayPunchScaleAnim(List<Vector2Int> tonguePathCoord, EntityColor targetColor) {
-        if (targetColor != modal.color) return;
-
-        if (tonguePathCoord.Contains(modal.coord)) {
-            AnimatePunchScale(Vector3.one * 0.5f, Game.tongueMoveDur, Game.tongueMoveDur * tonguePathCoord.IndexOf(modal.coord), punchScaleSFX);
-        }
-    }
-
-    // Default animation (can be overridden by subclasses)
     public virtual void AnimatePunchScale(Vector3 scale, float duration, float delay = 0f, SoundEffect sound = null) {
         if(sound)
             AudioManager.instance.PlaySound(sound, delay);
 
         transform.DOPunchScale(scale, duration, vibrato:1).SetDelay(delay);
     }
+
     public virtual void AnimatePunchPos(Vector3 dir, float duration, float delay = 0f, SoundEffect sound = null) {
         if (sound)
             AudioManager.instance.PlaySound(sound, delay);

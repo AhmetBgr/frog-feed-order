@@ -23,13 +23,12 @@ public class Utils : MonoBehaviour
 	}
 
     public static Vector2Int PosToCoord(Vector3 pos) {
-
-        Vector2Int coord = new Vector2Int(Mathf.Abs((int)pos.x), Mathf.Abs((int)pos.z));
-        
-        return coord;
-
+        return new Vector2Int(Mathf.Abs((int)pos.x), Mathf.Abs((int)pos.z));
     }
 
+    public static Vector3 CoordToPos(Vector2Int coord) {
+        return new Vector3(coord.x, 0f, -coord.y);
+    }
 
     public static Texture2D MakeTex(int width, int height, Color col) {
         Color[] pix = new Color[width * height];

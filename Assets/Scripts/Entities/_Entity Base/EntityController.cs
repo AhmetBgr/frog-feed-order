@@ -3,24 +3,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityController : MonoBehaviour
-{
-    public EntityModal entityModal;
+public class EntityController : MonoBehaviour{
+    public EntityModal modal;
+    public EntityView view;
 
     public Cell cell;
 
     public event Action OnExpire;
 
     protected virtual void OnEnable() {
-        //GameManager.instance.onGameOver += TriggerOnExpireImmidieatly;
+        FrogController.OnTongueMove += PlayPunchScaleAnim;
+
+        PlaySpawnAnim();
     }
 
     protected virtual void OnDisable() {
-        //GameManager.instance.onGameOver -= TriggerOnExpireImmidieatly;
-
+        FrogController.OnTongueMove -= PlayPunchScaleAnim;
     }
 
+    protected virtual void Awake() {
+        if (view == null)
+            view = GetComponent<EntityView>();
 
+        if (modal == null)
+            modal = GetComponent<EntityModal>();
+
+        modal.SetInitPos(transform.localPosition);
+    }
+
+    // Reset state when the entity is spawned
+    public virtual void OnSpawn() {
+        transform.SetParent(transform);
+
+        transform.localScale = Vector3.one;
+        transform.localPosition = new Vector3(0f, transform.localPosition.y, 0f);
+
+        gameObject.SetActive(true);
+
+        modal.SetIsExpired(false);
+
+        transform.localPosition = modal.initPos;
+
+        modal.SetCoord(Utils.PosToCoord(transform.position));
+    }
 
     public virtual IEnumerator TriggerOnExpire(float delay = 0) {
 
@@ -29,28 +54,39 @@ public class EntityController : MonoBehaviour
         OnExpire?.Invoke();
     }
 
-    public virtual void OnSpawn() {
-        entityModal.isExpired = false;
-        transform.localPosition = entityModal.initPos;
-        entityModal.coord = Utils.PosToCoord(transform.position);
+    private void PlaySpawnAnim() {
+        // Setup scale anim
+        transform.localScale = Vector3.zero;
+        view.AnimateScale(Vector3.one, 0.5f);
+    }
+
+    private void PlayPunchScaleAnim(List<Vector2Int> tonguePathCoord, EntityColor targetColor) {
+        if (targetColor != modal.color) return; // Exit if the colors don't match
+
+        // Check if the entity's coordination is in the tongue path
+        if (tonguePathCoord.Contains(modal.coord)) {
+            float delay = Game.unitMoveDur * tonguePathCoord.IndexOf(modal.coord);
+            view.AnimatePunchScale(Vector3.one * 0.5f, Game.unitMoveDur, delay, view.punchScaleSFX);
+        }
     }
 
     protected virtual void UpdateDirection() {
+        // Get the correct transform to use for direction calculation
         Transform transformToGetRot = transform.parent ? transform.parent : transform;
 
         // Update direction
         switch (transformToGetRot.rotation.eulerAngles.y) {
             case 0f:
-            entityModal.dir = Vector2Int.down;
+            modal.SetDirection(Vector2Int.down);
             break;
             case 90f:
-            entityModal.dir = Vector2Int.left;
+            modal.SetDirection(Vector2Int.left);
             break;
             case 180f:
-            entityModal.dir = Vector2Int.up;
+            modal.SetDirection(Vector2Int.up);
             break;
             case 270f:
-            entityModal.dir = Vector2Int.right;
+            modal.SetDirection(Vector2Int.right);
             break;
         }
     }

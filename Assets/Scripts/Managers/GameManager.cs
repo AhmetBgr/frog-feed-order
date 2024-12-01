@@ -5,16 +5,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private List<FrogModal> frogs = new List<FrogModal>();
+    [SerializeField] private List<EntityModal> frogs = new List<EntityModal>();
 
     [SerializeField] private SoundEffect levelCompleteSFX;
     [SerializeField] private SoundEffect gameOverSFX;
 
     [SerializeField] private int _movesCount;
-
-    public static event Action onLevelComplete;
-    public static event Action onGameOver;
-
 
     public int movesCount {
         get => _movesCount;
@@ -23,6 +19,9 @@ public class GameManager : MonoBehaviour
             TriggerOnMoveCountChanged();
         }
     }
+
+    public static event Action onLevelComplete;
+    public static event Action onGameOver;
 
     public event Action<int> OnMovesCountChanged;
 
@@ -42,13 +41,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable() {
         FrogController.OnInteracted += DecreaseMoveCount;
         FrogController.onFrogExpire += CheckforLevelComplete;
-        LevelManager.OnLeveload += Reset;
+        LevelManager.instance.OnLeveload += Reset;
     }
 
     private void OnDisable() {
         FrogController.OnInteracted -= DecreaseMoveCount;
         FrogController.onFrogExpire -= CheckforLevelComplete;
-        LevelManager.OnLeveload -= Reset;
+        LevelManager.instance.OnLeveload -= Reset;
     }
 
     private void Reset(int levelIndex) {
@@ -65,8 +64,6 @@ public class GameManager : MonoBehaviour
         movesCount--;
 
         CheckForGameOver();
-
-        //CheckforLevelComplete();
     }
 
     private void CheckForGameOver() {
@@ -107,13 +104,13 @@ public class GameManager : MonoBehaviour
         onLevelComplete?.Invoke();
     }
 
-    public void AddToFrogsPool(FrogModal frog) {
+    public void AddToFrogsPool(EntityModal frog) {
         if (frogs.Contains(frog)) return;
 
         frogs.Add(frog);
     }
 
-    public void RemoveFromFrogsPool(FrogModal frog) {
+    public void RemoveFromFrogsPool(EntityModal frog) {
         if (!frogs.Contains(frog)) return;
 
         frogs.Remove(frog);

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGizmo : MonoBehaviour
@@ -18,8 +16,11 @@ public class LevelGizmo : MonoBehaviour
         drawEnabled = b;
     }
 
+    // Used for drawing wire cube and line to help see where mouse input is aiming in level editor
     void OnDrawGizmos() {
         if (drawEnabled) {
+            
+
             Gizmos.color = color;
             Gizmos.DrawWireCube(pos, new Vector3(1f, 0.5f, 1f));
 

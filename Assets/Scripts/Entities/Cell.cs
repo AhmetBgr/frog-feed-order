@@ -14,7 +14,6 @@ public class Cell : MonoBehaviour, IPoolableObject {
         GameManager.onGameOver += HandleOnExpire;
 
         entity.OnExpire += RemoveSelf;
-
     }
 
     private void OnDisable() {
@@ -23,9 +22,7 @@ public class Cell : MonoBehaviour, IPoolableObject {
 
         GameManager.onGameOver -= HandleOnExpire;
 
-
         entity.OnExpire -= RemoveSelf;
-
     }
 
     public virtual void HandleOnExpire() {
@@ -35,7 +32,6 @@ public class Cell : MonoBehaviour, IPoolableObject {
         entity.transform.SetParent(transform);
 
         StartCoroutine(entity.TriggerOnExpire(0.5f));
-
     }
 
     private void RemoveSelf() {
@@ -52,21 +48,15 @@ public class Cell : MonoBehaviour, IPoolableObject {
     public void OnObjectSpawn() {
         node = GetComponentInParent<Node>();
         
-
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
-
-        entity.transform.SetParent(transform);
-
-        entity.transform.localScale = Vector3.one;
-        entity.transform.localPosition = new Vector3(0f, entity.transform.localPosition.y, 0f);
-
-        entity.gameObject.SetActive(true);
 
         entity.OnSpawn();
     }
 
     public void ReturnToPool() {
+        if (!entity) return;
+
         ObjectPooler.instance.AddToPool(name, gameObject);
     }
 

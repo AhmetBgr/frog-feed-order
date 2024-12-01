@@ -74,8 +74,8 @@ MonoBehaviour:
   color: 0
   view: {fileID: 4719265725870253153}
   dir: {x: 0, y: 0}
-  isExpired: 0
   initPos: {x: 0, y: 0, z: 0}
+  isExpired: 0
 --- !u!114 &4719265725870253153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,7 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb19cb4bc994cdd4d905598adee89c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modal: {fileID: 8971673916163357929}
   punchScaleSFX: {fileID: 11400000, guid: a47b54e1ba2b78e4f92c9516f4c1a0c5, type: 2}
   entityDenySFX: {fileID: 11400000, guid: 6c3ac27e297bea84e88cb9c82579d5c5, type: 2}
   eatenSFX: {fileID: 11400000, guid: baacd1786d1bf16418e7d3c535562d35, type: 2}
@@ -104,10 +103,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82b9aff4fb90a15428e2a0966392e851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityModal: {fileID: 8971673916163357929}
-  cell: {fileID: 0}
   modal: {fileID: 8971673916163357929}
   view: {fileID: 4719265725870253153}
+  cell: {fileID: 0}
+  grapeView: {fileID: 4719265725870253153}
 --- !u!1 &7794628042855945812
 GameObject:
   m_ObjectHideFlags: 0

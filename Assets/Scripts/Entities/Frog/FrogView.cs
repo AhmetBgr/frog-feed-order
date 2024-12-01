@@ -31,12 +31,9 @@ public class FrogView : EntityView{
         for (int i = 0; i < pointsCount - 1; i++) {
             float startTime = Time.time;
 
-
             Vector3 startPosition = tonguePath[i];
             Vector3 endPosition = tonguePath[i + 1];
             Vector3 pos = startPosition;
-
-
 
             while (pos != endPosition) {
 
@@ -54,11 +51,7 @@ public class FrogView : EntityView{
 
         }
 
-
-
         yield return new WaitForSecondsRealtime(segmentDuration / 2);
-
-
         // Retract tongue anim
 
         // for each loop, it's lerping all points that didn't reach desired tongue path point
@@ -68,8 +61,6 @@ public class FrogView : EntityView{
             Vector3 startPosition = tonguePath[i - 1];
             Vector3 endPosition = tonguePath[i];
             Vector3 pos = endPosition;
-
-
 
             while (pos != startPosition) {
                 float t = (Time.time - startTime) / segmentDuration;

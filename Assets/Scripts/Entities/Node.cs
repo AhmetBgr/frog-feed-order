@@ -49,14 +49,14 @@ public class Node : MonoBehaviour{
         return cellToRemove;
     }
 
-    // Level editor uses this funtion to destroy the top cell
+    // Used by Level Editor
     public void DestroyTopCell() {
         UpdateTopCell();
 
         DestroyImmediate(RemoveTopCell().gameObject);
     }
 
-    // Level editor uses this funtion to add a cell to the top
+    // Instanciate new cell to the top used by LevelEditor
     public void AddCell(EntityType type, EntityColor color) {
         if (gridManager == null && transform.parent != null)
             transform.parent.TryGetComponent(out gridManager);

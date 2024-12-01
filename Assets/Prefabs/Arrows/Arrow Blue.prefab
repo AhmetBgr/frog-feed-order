@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityModal: {fileID: 3469422469043736317}
+  entityView: {fileID: 3560997266780914725}
   cell: {fileID: 0}
   modal: {fileID: 3469422469043736317}
   view: {fileID: 3560997266780914725}

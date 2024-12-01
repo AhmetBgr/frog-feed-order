@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -12,8 +10,10 @@ public class SoundEditor : Editor {
 
         SoundEffect sound = (SoundEffect)target;
 
+        // Volume slider
         sound.volume = EditorGUILayout.Slider(sound.volume, leftValue: 0, rightValue: 1);
 
+        // Toggle for random pitch usage
         sound.useRandomPitch = GUILayout.Toggle(sound.useRandomPitch, "Use Random Pitch");
 
         if (sound.useRandomPitch)
@@ -29,7 +29,7 @@ public class SoundEditor : Editor {
             sound.StopPreview();
         }
 
+        // Mark the sound object as dirty to ensure changes are saved
         EditorUtility.SetDirty(sound);
-
     }
 }

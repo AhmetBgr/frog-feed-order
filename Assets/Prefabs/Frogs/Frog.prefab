@@ -260,8 +260,8 @@ MonoBehaviour:
   color: 0
   view: {fileID: 9212175779826650880}
   dir: {x: 0, y: 0}
-  isExpired: 0
   initPos: {x: 0, y: 0, z: 0}
+  isExpired: 0
 --- !u!114 &9212175779826650880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,7 +274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d184ae4f72ad5d44a9de43d841a35d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modal: {fileID: 7530044279479584224}
   punchScaleSFX: {fileID: 0}
   entityDenySFX: {fileID: 11400000, guid: 6c3ac27e297bea84e88cb9c82579d5c5, type: 2}
   lr: {fileID: 8026477943891562601}
@@ -291,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd98ec3880b8fe4e8649ffc412e06ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityModal: {fileID: 7530044279479584224}
-  cell: {fileID: 0}
   modal: {fileID: 7530044279479584224}
   view: {fileID: 9212175779826650880}
+  cell: {fileID: 0}
+  frogView: {fileID: 9212175779826650880}

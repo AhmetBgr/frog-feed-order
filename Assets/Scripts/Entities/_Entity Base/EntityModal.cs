@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum EntityType {
@@ -23,22 +20,24 @@ public class EntityModal : MonoBehaviour{
     public EntityColor color;
     public EntityView view;
     public Vector2Int dir;
+    public Vector3 initPos;
     public bool isExpired = false;
 
-    public Vector3 initPos;
 
-
-    private void Awake() {
-        initPos = transform.localPosition;
-
+    public void SetInitPos(Vector3 newPos) {
+        initPos = newPos;
     }
 
-    protected virtual void Start() {
-        // Find coord
-        coord = Utils.PosToCoord(transform.position);
-
+    public void SetDirection(Vector2Int newDir) {
+        dir = newDir;
     }
 
+    public void SetIsExpired(bool value) {
+        isExpired = value;
+    }
 
+    public void SetCoord(Vector2Int newCoord) {
+        coord = newCoord;
+    }
 
 }

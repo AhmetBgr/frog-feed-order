@@ -26,7 +26,7 @@ public class UIController : MonoBehaviour
         GameManager.onLevelComplete += OpenLevelCompletePanel;
         GameManager.onGameOver += OpenGameOverPanel;
 
-        LevelManager.OnLeveload += UpdateLevelNameText;
+        LevelManager.instance.OnLeveload += UpdateLevelNameText;
     }
 
     private void OnDisable() {
@@ -34,8 +34,7 @@ public class UIController : MonoBehaviour
         GameManager.onLevelComplete -= OpenLevelCompletePanel;
         GameManager.onGameOver -= OpenGameOverPanel;
 
-
-        LevelManager.OnLeveload -= UpdateLevelNameText;
+        LevelManager.instance.OnLeveload -= UpdateLevelNameText;
     }
 
     private void Start() {
@@ -44,16 +43,14 @@ public class UIController : MonoBehaviour
     }
 
     void UpdateMoveCounterText(int movesCount){
-        movesCounterText.text = String.Format(movesCounterBaseText, movesCount);// movesCount.ToString();
+        movesCounterText.text = String.Format(movesCounterBaseText, movesCount);
 
         movesCounterText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
     }
 
     void UpdateLevelNameText(int curLevelIndex) {
         Debug.Log("cur level index in uicont: " + curLevelIndex);
-        levelNameText.text = String.Format(levelNameBaseText, curLevelIndex + 1); //(curLevelIndex+1).ToString();
-
-        //levelNameText.text = String.Format(levelNameText.text, curLevelIndex + 1);
+        levelNameText.text = String.Format(levelNameBaseText, curLevelIndex + 1);
 
         levelNameText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
     }
@@ -67,18 +64,8 @@ public class UIController : MonoBehaviour
 
 
         // Disable next level button when completed the final level
-        if (LevelManager.currentLevelIndex >= LevelManager.instance.levels.Count - 1)
+        if (LevelManager.instance.currentLevelIndex >= LevelManager.instance.levels.Count - 1)
             nextButton.gameObject.SetActive(false);
-
-        /*if (state == State.LevelComplete) {
-
-        }
-        else if(state == State.GameOver) {
-            gameOverPanel.gameObject.SetActive(true);
-            Vector3 initScale = gameOverPanel.localScale;
-            gameOverPanel.localScale = Vector3.zero;
-            gameOverPanel.DOScale(initScale, 2f).SetDelay(0.5f);
-        }*/
 
     }
 

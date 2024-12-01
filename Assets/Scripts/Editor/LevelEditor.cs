@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelEditor : EditorWindow {
     [SerializeField] private GridManager gridManager;
@@ -12,9 +10,10 @@ public class LevelEditor : EditorWindow {
 
     private string LevelPath => $"{Application.dataPath}/Resources/Levels/";
 
-    // UI Variables
     private string[] actionOptions;
     private string[] colorOptions;
+
+    // List of all saved levels loaded from the project resources.
     private List<string> savedLevels => Utils.allLevels;
 
     private int selectedActionIndex = 0;
@@ -27,12 +26,12 @@ public class LevelEditor : EditorWindow {
 
     private Vector2 scrollPosition;
 
+    // Custom GUI style for consistent wrapping and styling of the editor UI.
     private GUIStyle wrapperStyle;
     private GUIStyle WrapperStyle => wrapperStyle ??= CreateWrapperStyle();
 
     private Event currentEvent;
 
-    // Entry Point
     [MenuItem("Window/Level Editor")]
     public static void ShowWindow() => GetWindow<LevelEditor>();
 
@@ -90,15 +89,16 @@ public class LevelEditor : EditorWindow {
         GUILayout.EndVertical();
     }
 
+    // Handles real-time interactions in the Scene View (e.g., mouse clicks).
     private void OnSceneGUI(SceneView sceneView) {
         currentEvent = Event.current;
 
-        HandleSceneMouseInput();
+        HandleSceneMouseInput();    // Process mouse input for placing or modifying cells.
 
         Vector3 currentPosition = GetGridPosition(currentEvent.mousePosition);
-        UpdateGizmo(currentPosition);
+        UpdateGizmo(currentPosition);   // Update the visual indicator in the scene.
 
-        sceneView.Repaint();
+        sceneView.Repaint();    // Repaint the scene to reflect changes.
     }
 
     private void HandleSceneMouseInput() {
@@ -123,13 +123,11 @@ public class LevelEditor : EditorWindow {
         movesCount = EditorGUILayout.IntField(movesCount);
 
         EditorGUILayout.EndHorizontal();
-
     }
 
     private void DrawGridActions() {
         if (GUILayout.Button("Clear Grid")) {
-            // This generetas 5x5 grid from scratch 
-            // and populates nodesGrid matrix 
+            gridManager.DestroyAllNodes();
             gridManager.PopulateNodesGrid();
         }
     }
@@ -182,8 +180,9 @@ public class LevelEditor : EditorWindow {
         }
     }
 
+    // Rotates an entity on a specific node by 90 degrees.
     private void RotateEntity(Node node) {
-        EntityModal entity = node.topCell?.entity.entityModal;
+        EntityModal entity = node.topCell?.entity.modal;
 
        
         if (entity == null || entity.type == EntityType.Grape) {
@@ -249,6 +248,8 @@ public class LevelEditor : EditorWindow {
         movesCount = levelManager.curSerializedLevel.movesCount;
 
     }
+
+    // Converts a screen mouse position to a position on the grid.
     private Vector3 GetGridPosition(Vector3 mousePosition) {
         Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
